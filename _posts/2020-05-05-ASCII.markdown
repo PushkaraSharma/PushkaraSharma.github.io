@@ -6,9 +6,9 @@ description: In this article, we will use Python to convert any given image to a
 img: clash.png # Add image post (optional)
 tags: [Python, Image Processing, Beginners]
 ---
-*This project will give you a solid foundation in understanding the structure of images and playing around it and that is in a fun way!! So, Let's get started.*
+> ### **This project will give you a solid foundation in understanding the structure of images and playing around it and that is in a fun way!! So, Let's get started.**
 
-![](/home/pushkara/Desktop/portfolio/flexible-jekyll/assets/img/Ascii.png)
+![](/assets/img/Ascii.png)
 
 **Dependencies Required:**
 
