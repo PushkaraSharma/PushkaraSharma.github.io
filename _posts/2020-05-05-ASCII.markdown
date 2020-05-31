@@ -1,0 +1,85 @@
+---
+layout: post
+title: Convert Images to ASCII Art Images Using Python
+date: 2020-05-05 13:32:20 +0300
+description: In this article, we will use Python to convert any given image to an artistic ASCII colored image in less than 35 lines of code. # Add post description (optional)
+img: https://miro.medium.com/max/1000/1*oFuefSKAfPwioxonkUEM9w.png # Add image post (optional)
+tags: [Python, Image Processing, Beginners]
+---
+*This project will give you a solid foundation in understanding the structure of images and playing around it and that is in a fun way!! So, Let's get started.*
+
+**Dependencies Required:**
+
+You must have python installed on your system along with `pillow` python package. You can simply install `pillow` with `pip install pillow`. Firstly I will explain all the steps then we will proceed to the code snippets.
+
+**Steps:-**
+
+- Open the image from the provided path.
+- Scale the images otherwise very big output image will be generated.
+- Convert the image into greyscale image.
+- Get relevant character for each pixel from the character list(according to the pixel value, the character from the list is chosen i.e. “_” represents low density).
+- Now that character is printed on the new canvas of given size with ImageDraw function(in the function itself you can choose the colors to be RGB or B&W).
+- Save the newly generated image and you are done!!!
+
+## **Code:**
+
+```python
+from PIL import Image,ImageDraw,ImageFont
+import math
+```
+
+Import these libraries first
+
+```python
+image = Image.open("InputImage.jpg")
+scaleFac = 0.8
+charWidth = 10
+charHeight = 18
+w,h = image.size
+image = image.resize((int(scaleFac*w),int(scaleFac*h*(charWidth/charHeight))),Image.NEAREST)
+w,h = image.size
+pixels = image.load()
+```
+
+Here Firstly the image is loaded then the scaling factor is chosen (0.1–1) and the size of each ASCII character in the final output image is decided then the width and height of image are taken and the image is resized. Doing so is very important otherwise more computational power will be used and the output images will be too big.
+
+```python
+font = ImageFont.truetype('C:\\Windows\\Fonts\\lucon.ttf',15)
+outputImage = Image.new('RGB',(charWidth*w,charHeight*h),color=(0,0,0))
+draw = ImageDraw.Draw(outputImage)
+```
+
+Now the font for ASCII characters is decided. I have used inbuilt fonts of windows. After that, a canvas ‘outputImage’ of black color is created using Image function and ImageDraw object is created to embed ASCII characters on the canvas.
+
+```python
+def getSomeChar(h):
+    chars  = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-                          _+~<>i!lI;:,\"^`'. "[::-1]
+    charArr = list(chars)
+    l = len(charArr)
+    mul = l/256
+    return charArr[math.floor(h*mul)]
+```
+
+This function **getSomeChar** will get pixel value as a parameter that ranges between 0–256 and it returns respective ASCII character from the chars list. You can make your own char list if you want.
+
+```python
+for i in range(h):
+    for j in range(w):
+        r,g,b = pixels[j,i]
+        grey = int((r/3+g/3+b/3))
+        pixels[j,i] = (grey,grey,grey)
+        draw.text((j*charWidth,i*charHeight),getSomeChar(grey),
+        font=font,fill = (r,g,b))
+```
+
+This is where the most important work is done. We loop through each pixel and gathered RGB components and the mean of them gives us the gray pixel value. Now, in a `draw.text` it takes the position of embedding character as the first argument and character itself that is being chosen with **getSomeChar** function as the second argument, a font that we have chosen earlier as the third and fill that is color as the fourth argument.
+
+```
+outputImage.save("name_for_output.png")
+```
+
+Then just save the image…..and share the generated artistic image.
+
+You can play around with font size, font style, scaling factor, canvas background, and characters list.
+
+This is my first blog … so please let me know if you guys like this or not. Suggestions are most welcome.
