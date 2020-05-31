@@ -3,7 +3,7 @@ layout: post
 title: Convert Images to ASCII Art Images Using Python
 date: 2020-05-05 13:32:20 +0300
 description: In this article, we will use Python to convert any given image to an artistic ASCII colored image in less than 35 lines of code. # Add post description (optional)
-img: https://miro.medium.com/max/1000/1*oFuefSKAfPwioxonkUEM9w.png # Add image post (optional)
+img: clash.png # Add image post (optional)
 tags: [Python, Image Processing, Beginners]
 ---
 *This project will give you a solid foundation in understanding the structure of images and playing around it and that is in a fun way!! So, Let's get started.*
