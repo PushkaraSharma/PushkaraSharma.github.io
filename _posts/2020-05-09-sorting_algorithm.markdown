@@ -3,7 +3,7 @@ layout: post
 title: Visualise Interesting Sorting Algorithms With Python
 date: 2020-05-09 18:30:20 +0300
 description: There are various types of sorting algorithms out there and sometimes it becomes very difficult to understand their internal working without visualization. Hence I decided to visualize these sorting algorithms in python with the help of matplotlib.animations library. # Add post description (optional)
-#img: post2.gif # Add image post (optional)
+img: post2.gif # Add image post (optional)
 tags: [Sorting Algorithms, Python, Visualization, Programming]
 ---
 > ### *There are various types of sorting algorithms out there and sometimes it becomes very difficult to understand their internal working without visualization. Hence I decided to visualize these sorting algorithms in python with the help of matplotlib.animations library.*
