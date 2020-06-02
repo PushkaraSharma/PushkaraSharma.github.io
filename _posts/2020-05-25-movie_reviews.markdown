@@ -83,7 +83,8 @@ def bag_words(words):
 
 We have created the function  ***TrainingAndTesting()*** that trains and check the accuracy of the model. There are two empty lists used to store positive and negative reviews. Then, we iterate in the movie_reviews column `fileids`and if it contains `pos`then that row or review is stored in a positive review list and vice versa. After that, we iterate through each review stored in `pos_reviews` and call the ***bag_words*** function that in turn gives the dictionary containing review words (removed stopwords and punctuations) and associate `pos`with it representing that this is the positive review. The same goes for negative reviews. Then we shuffle and split the data for training and testing. We have simply used [NaiveBayes classifier](https://www.geeksforgeeks.org/naive-bayes-classifiers/) for this sentimental analysis. The training and testing are simple with inbuilt functions of nltk.
 
-<center>![Training with nltk is like magic](/assets/img/post3_2.gif)
+![Training with nltk is like magic](/assets/img/post3_2.gif)
+
 
 ​                                                                      Training with nltk is like magic
 
@@ -200,9 +201,7 @@ else:
 
 I was able to get the accuracy of the model around 78% and here is the screen shot of my result. Here 225 are the number of reviews that are analyzed.
 
-<center>![Obtained results](/assets/img/post3_3.jpeg)
-
-​                                                                                  Obtained results
+![Obtained results](/assets/img/post3_3.jpeg)
 
 The described project is for the beginners, hence I have not used advanced techniques like RNN(Recurrent Neural Networks). The only focus of this article was to provide knowledge and starting phase projects in the field of machine learning.
 
