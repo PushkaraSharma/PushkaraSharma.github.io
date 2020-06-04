@@ -167,7 +167,7 @@ final
 
 
 
-![](/home/pushkara/Desktop/portfolio/flexible-jekyll/assets/img/post4_2.gif)           
+![](/assets/img/post4_2.gif)           
 
 ​                     *YES! WE DID IT*
 
