@@ -10,35 +10,35 @@ tags: [Naturallanguageprocessing, Web Scraping, Text Summarization, Artificial I
 
 
 
-> #### *Have you seen applications like* ***inshorts\*** *that converts the articles or news into 60 words summary. Yes, that’s what we are going to build today. In this article, we will build a text summarizer with* **extracted method** *that is super easy to build and very reliable when it comes to results. Don't worry, I will also explain what this extracted method is?*
+> #### *Have you seen applications like*  ***inshorts*** that converts the articles or news into 60 words summary. Yes, that’s what we are going to build today. In this article, we will build a text summarizer with ***extractive method*** that is super easy to build and very reliable when it comes to results. Don't worry, I will also explain what this extracted method is?
 
 ![Sentimental Analysis with Web Scraping](/assets/img/post4_1.png)
 
-You may found many articles about ***text summarizers\*** but what makes this article unique is the ***short\*** and ***beginners friendly\*** high-level description of the code snippets.
+You may found many articles about ***text summarizers*** but what makes this article unique is the ***short*** and ***beginners friendly*** high-level description of the code snippets.
 
 So, Text summarization can be done in two ways:-
 
-- ***Extracted method\*** — Selecting the **n** numbers of most important sentences from the article that most probably convey the message of the article. This approach is very easy to implement and beginners friendly. That's the main reason of choosing this method for this tutorial.
-- ***Abstractive method\*** — This method uses concepts of deep learning like ***encoder-decoder\*** architecture, **LSTM(**Long Short Term Memory**)** networks that are very difficult for beginners to understand. This method generates the whole new summary of the article and contains sentences that are not even present in the original article. This method may lead to the creation of sentences that don't have any meaning at all.
+- ***Extractive method*** — Selecting the **n** numbers of most important sentences from the article that most probably convey the message of the article. This approach is very easy to implement and beginners friendly. That's the main reason of choosing this method for this tutorial.
+- ***Abstractive method*** — This method uses concepts of deep learning like ***encoder-decoder*** architecture, **LSTM(**Long Short Term Memory**)** networks that are very difficult for beginners to understand. This method generates the whole new summary of the article and contains sentences that are not even present in the original article. This method may lead to the creation of sentences that don't have any meaning at all.
 
 Now, as we are clear about why we have chosen the extracted method, Lets directly jump to the coding section 😎
 
 ## **Prerequisites:-**
 
-I assume that you are familiar with ***python\*** and already have installed the ***python 3\*** in your systems. I have used ***jupyter notebook\*** for this tutorial. You can use the **IDE** of your like.
+I assume that you are familiar with ***python*** and already have installed the ***python 3*** in your systems. I have used ***jupyter notebook*** for this tutorial. You can use the **IDE** of your like.
 
 ## **Installing Required Libraries**
 
-For this project, you need to have the following packages installed in your python. If they are not installed, you can simply use`pip install PackageName` . The ***scraping\*** part is optional, you can also skip that and use any local text file for which you want a summary.
+For this project, you need to have the following packages installed in your python. If they are not installed, you can simply use`pip install PackageName` . The ***scraping part*** is optional, you can also skip that and use any local text file for which you want a summary.
 
-- **bs4** — for BeautifulSoup that is used for parsing Html page.
-- **lxml** — it is the package that is used to process Html and XML with python.
+- **bs4** — for BeautifulSoup that is used for parsing HTML page.
+- **lxml** — it is the package that is used to process HTML and XML with python.
 - **nltk** — for performing natural language processing tasks.
-- **urllib** — for requesting a webpage.
+- **urllib** — for requesting a web page.
 
 # **LETS START CODING**
 
-Here, firstly we have import all the libraries that we will use. ***bs4\*** and ***urllib\*** will be used for scraping of the article. ***re\***(regular expression) is used for removing unwanted text from the article. The 4th line is used to install the ***nltk(\***natural language toolkit***)\*** package that is the most important package for this tutorial. After that, we have downloaded some of the data that is required for the text processing like ***punkt\*** (used for sentence tokenizing) and ***stopwords\***(words like `is,the,of` that does not contribute).
+Here, firstly we have import all the libraries that we will use. ***bs4*** and ***urllib*** will be used for scraping of the article. ***re*** (regular expression) is used for removing unwanted text from the article. The 4th line is used to install the ***nltk*** (natural language toolkit ) package that is the most important package for this tutorial. After that, we have downloaded some of the data that is required for the text processing like ***punkt*** (used for sentence tokenizing) and ***stopwords*** (words like `is,the,of` that does not contribute).
 
 ```python
 import bs4
@@ -61,7 +61,7 @@ Here, I have simply taken the URL of the article from the user itself.
 url_name = input("Enter url of the text you want to summerize:")
 ```
 
-In this snippet of code, we have requested the page source with urllib and then parse that page with ***BeautifulSoup\*** to find the paragraph tags and added the text to the `article`variable.
+In this snippet of code, we have requested the page source with urllib and then parse that page with ***BeautifulSoup*** to find the paragraph tags and added the text to the `article`variable.
 
 ```python
 web = url.urlopen(url_name)
@@ -73,7 +73,7 @@ for i in elements:
 article
 ```
 
-Now, we remove all the special characters from that string variable `article`that contains the whole article that is to be summarized. For this, we have simply used inbuilt `replace`function and also used a regular expression (***re\***) to remove numbers.
+Now, we remove all the special characters from that string variable `article`that contains the whole article that is to be summarized. For this, we have simply used inbuilt `replace`function and also used a regular expression (***re***) to remove numbers.
 
 ```python
 processed = article.replace(r'^\s+|\s+?$','')
@@ -85,13 +85,13 @@ processed = re.sub(r'\[[0-9]*\]','',processed)
 processed
 ```
 
-Here, we have simply used the `sent_tokenize`function of ***nltk\*** to make the list that contains sentences of the article at each index.
+Here, we have simply used the `sent_tokenize`function of ***nltk*** to make the list that contains sentences of the article at each index.
 
 ```python
 sentences = sent_tokenize(processed)
 ```
 
-After that, we convert the characters of article to `lowercase`. Then we loop through every word of the article and check if it is not stopword or any punctuation(we have already removed the punctuations but we still use this just in case). And if the word is none of them we just added that word into the dictionary and then further count the ***frequency\*** of that word.
+After that, we convert the characters of article to `lowercase`. Then we loop through every word of the article and check if it is not stopword or any punctuation(we have already removed the punctuations but we still use this just in case). And if the word is none of them we just added that word into the dictionary and then further count the ***frequency*** of that word.
 
 In the screen shot, you can see the dictionary containing every word with its count in the article(higher the frequency of the word, more important it is). Now you know why we have removed stopwords like `of the for` otherwise, they will come on top.
 
@@ -149,7 +149,7 @@ sentence_score
 
 **In the end**, We have used `heapq` to find the 4 sentences with the highest scores. You can choose any number of sentences you want. Then simply joined the list of selected sentences to form a single string of summary.
 
-The final output summary for the *Natural Language Processing* article can be seen in the screenshot attached.
+The final output summary for the *Natural Language Processing* article can be seen in the screen shot attached.
 
 ```python
 import heapq
@@ -171,7 +171,7 @@ final
 
 ​                     *YES! WE DID IT*
 
-The ***extracted summary\*** may be not up to the mark but it is capable enough of conveying the main idea of the given article. Also, it is more **reliable** as it only outputs the selected number of sentences from the article itself rather than generating the output of its own.
+The ***extracted summary*** may be not up to the mark but it is capable enough of conveying the main idea of the given article. Also, it is more **reliable** as it only outputs the selected number of sentences from the article itself rather than generating the output of its own.
 
 I will also try to make the tutorial for the **abstractive method**, but that will be a great challenge for me to explain. 
 
