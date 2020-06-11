@@ -6,11 +6,11 @@ description: Predicting the upcoming trend of stock using Deep learning Model(Re
 img: post5.png # Add image post (optional)
 tags: [Deep Learning, Artificial Intelligence, RNN]
 ---
-#### Predicting the upcoming trend of stock using Deep learning Model(Recurrent Neural Network)
+## Predicting the upcoming trend of stock using Deep learning Model(Recurrent Neural Network)
 
 
 
-> #### In this article, we will build a deep learning model (specifically the **RNN** Model) that will help us to **predict whether the given stock will go up or down in the future**. Remember, we are not interested in predicting the actual values as that will be far more complex compared to the prediction of the trend.
+> ### *In this article, we will build a deep learning model (specifically the **RNN** Model) that will help us to **predict whether the given stock will go up or down in the future**. Remember, we are not interested in predicting the actual values as that will be far more complex compared to the prediction of the trend.*
 
 ![](/home/pushkara/Desktop/portfolio/flexible-jekyll/assets/img/post5.png)
 
@@ -28,7 +28,7 @@ To understand this, we have to understand the **neural network** first. Here, I 
 
 ### Prerequisites:-
 
-I assume that you are familiar with ***python\*** and already have installed the ***python 3\*** in your systems. I have used a ***jupyter notebook\*** for this tutorial. You can use the **IDE** of your like.
+I assume that you are familiar with **python** and already have installed the **python 3** in your systems. I have used a **jupyter notebook** for this tutorial. You can use the **IDE** of your like.
 
 ### Dataset Used:-
 
@@ -61,7 +61,7 @@ from keras.layers import LSTM
 from keras.layers import Dropout
 ```
 
-Now, we have loaded our dataset as a data frame in a variable named **df**. Then, we have checked the shape of the dataset that comes out to be **(2035,8)** means there are 2035 rows and 8 columns in the dataset. After that, we have reversed the dataset upside-down so that the **date** starts from the oldest and goes to the most recent, and in doing so we also have to reset our indexes as well. Then we have just printed some starting rows of the dataset with `head()` .
+Now, we have loaded our dataset as a data frame in a variable named **df**. Then, we have checked the shape of the dataset that comes out to be **(2035,8)** means there are 2035 rows and 8 columns in the dataset. After that, we have reversed the dataset upside-down so that the **date** starts from the oldest and goes to the most recent, and in doing so we also have to reset our indexes as well. Then we have just printed some starting rows of the dataset with `head()` . The first 5 entries of dataset are shown in screenshot below.
 
 ```python
 df = pd.read_csv('NSE-TATAGLOBAL.csv')
@@ -73,7 +73,7 @@ df.head()
 
 ![Dataset’s first 5 entries](https://cdn-images-1.medium.com/max/800/1*hfHXR7wCNp_eqwTOzCleXg.jpeg)
 
-​                                                                                 *Dataset’s first 5 entries*
+​                                                                           
 
 We have chosen only one feature that is **Open** to train our model but you are free to choose more than one feature but then the code will be changed accordingly. In the training set, we have 2000 values while in testing we decided to have only 35. Then we simply printed the shape of both `train_set` `test_set` that comes out to be (2000,1) and (35,1) respectively.
 
