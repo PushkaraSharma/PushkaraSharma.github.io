@@ -193,6 +193,8 @@ plt.show()
 
 As you can see from the figure itself, our model was **quite accurate in predicting the upcoming trend of the given stock**.😎 Now you can become a great advisor in the share market. 😆
 
+The source code is available on [**GitHub**](https://github.com/PushkaraSharma/medium_articles_code/tree/master/Predict_Stock_Trend_RNN). Please feel free to make improvements.
+
 The model can further be improved by incorporating **more features**, **increasing the dataset**, and **tuning the model** itself.
 
 Thank you for your precious time.😊And I hope you like this tutorial.
