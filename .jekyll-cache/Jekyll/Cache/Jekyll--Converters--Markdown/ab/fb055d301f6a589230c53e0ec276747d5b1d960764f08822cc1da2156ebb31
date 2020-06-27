@@ -1,0 +1,125 @@
+I"�F<blockquote>
+  <h3 id="there-are-various-types-of-sorting-algorithms-out-there-and-sometimes-it-becomes-very-difficult-to-understand-their-internal-working-without-visualization-hence-i-decided-to-visualize-these-sorting-algorithms-in-python-with-the-help-of-matplotlibanimations-library"><em>There are various types of sorting algorithms out there and sometimes it becomes very difficult to understand their internal working without visualization. Hence I decided to visualize these sorting algorithms in python with the help of matplotlib.animations library.</em></h3>
+</blockquote>
+
+<table>
+  <tbody>
+    <tr>
+      <td><img src="/assets/img/post2.gif" alt="alt" /></td>
+      <td><img src="/assets/img/post2_1.gif" alt="alt" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>NOTE:- In this article, we will also compute the number of operations performed and will be able to see the time complexity of the sorting algorithm.</strong></p>
+
+<p>As our purpose is to only visualize the sorting algorithms hence I will be using the <code class="language-plaintext highlighter-rouge">merge sort </code>for demonstration but you should implement the rest of them in order to understand the differences among them.</p>
+
+<p>Before we start coding, you must have <code class="language-plaintext highlighter-rouge">python 3.3 </code>or above installed because I have used the <code class="language-plaintext highlighter-rouge">yield from</code> feature or generator.</p>
+
+<h2 id="lets-start-"><strong>Let’s Start:-</strong></h2>
+
+<p>Firstly you need to import the given libraries. We have used the <code class="language-plaintext highlighter-rouge">random</code> module in order to generate a random array of numbers to be sorted. The <code class="language-plaintext highlighter-rouge">matplotlib pyplot</code> and <code class="language-plaintext highlighter-rouge">animation</code> modules will be used to animate the sorting algorithm.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.animation</span> <span class="k">as</span> <span class="n">anim</span>
+</code></pre></div></div>
+
+<p>Below given <code class="language-plaintext highlighter-rouge">swap</code> function will be used to swap the elements in the given array. Defining a separate function is useful as it will be used exhaustively throughout different algos.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">swap</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+    <span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span>
+    <span class="c1"># also in python A[i],A[j]=A[j],A[i]
+</span></code></pre></div></div>
+
+<p>We have used <code class="language-plaintext highlighter-rouge">Merge Sort</code> to demonstrate this visualization because this is the most popular and one of the best sorting algorithm out there. Merge sort follows <code class="language-plaintext highlighter-rouge">Divide and Conquer</code> technique for sorting. It divides the array into two subarrays and each of these is sorted by calling the merge sort recursively on them. Our main focus is to visualize the algorithm hence I will not explain the working of it. The following code shows the merge sort. In order to get the intuition on how it works, one can follow this video on youtube <a href="https://youtu.be/jlHkDBEumP0.">jenny’s lecture</a> .</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">merge_sort</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span><span class="n">lb</span><span class="p">,</span><span class="n">ub</span><span class="p">):</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">ub</span><span class="o">&lt;=</span><span class="n">lb</span><span class="p">):</span>
+        <span class="k">return</span>
+    <span class="k">elif</span><span class="p">(</span><span class="n">lb</span><span class="o">&lt;</span><span class="n">ub</span><span class="p">):</span>
+        <span class="n">mid</span> <span class="o">=</span><span class="p">(</span><span class="n">lb</span><span class="o">+</span><span class="n">ub</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span>
+        <span class="k">yield</span> <span class="k">from</span> <span class="n">merge_sort</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span><span class="n">lb</span><span class="p">,</span><span class="n">mid</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="k">from</span> <span class="n">merge_sort</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">ub</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="k">from</span> <span class="n">merge</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span><span class="n">lb</span><span class="p">,</span><span class="n">mid</span><span class="p">,</span><span class="n">ub</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">arrdef</span> <span class="n">merge</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span><span class="n">lb</span><span class="p">,</span><span class="n">mid</span><span class="p">,</span><span class="n">ub</span><span class="p">):</span>
+    <span class="n">new</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">lb</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="n">mid</span><span class="o">+</span><span class="mi">1</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">mid</span> <span class="ow">and</span> <span class="n">j</span><span class="o">&lt;=</span><span class="n">ub</span><span class="p">):</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&lt;</span><span class="n">arr</span><span class="p">[</span><span class="n">j</span><span class="p">]):</span>
+            <span class="n">new</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">arr</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="n">j</span><span class="o">+=</span><span class="mi">1</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">&gt;</span><span class="n">mid</span><span class="p">):</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">j</span><span class="o">&lt;=</span><span class="n">ub</span><span class="p">):</span>
+            <span class="n">new</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">arr</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="n">j</span><span class="o">+=</span><span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">mid</span><span class="p">):</span>
+            <span class="n">new</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">new</span><span class="p">):</span>
+        <span class="n">arr</span><span class="p">[</span><span class="n">lb</span><span class="o">+</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="k">yield</span> <span class="n">arr</span>
+</code></pre></div></div>
+
+<p>Now we will simply create the random list of numbers to be sorted and the length of the array will be decided by the user itself. After that,<code class="language-plaintext highlighter-rouge">if condition</code> is used to choose the algorithm.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s">"Enter the number of elements:"</span><span class="p">))</span>
+<span class="n">al</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s">"Choose algorithm:  1.Bubble </span><span class="se">\n</span><span class="s"> 2.Insertion </span><span class="se">\n</span><span class="s"> 3.Quick </span><span class="se">\n</span><span class="s"> 4.Selection </span><span class="se">\n</span><span class="s"> 5.Merge Sort))
+array = [i + 1 for i in range(n)]
+random.shuffle(array)if(al==1):
+    title = "</span><span class="n">Bubble</span> <span class="n">Sort</span><span class="s">"
+    algo = sort_buble(array)
+elif(al==2):
+    title = "</span><span class="n">Insertion</span> <span class="n">Sort</span><span class="s">"
+    algo = insertion_sort(array)
+elif(al==3):
+    title = "</span><span class="n">Quick</span> <span class="n">Sort</span><span class="s">"
+    algo = quick_Sort(array,0,n-1)
+elif(al==4):
+    title="</span><span class="n">Selection</span> <span class="n">Sort</span><span class="s">"
+    algo = selection_sort(array)
+elif (al == 5):
+    title = "</span><span class="n">Merge</span> <span class="n">Sort</span><span class="s">"
+    algo=merge_sort(array,0,n-1)
+</span></code></pre></div></div>
+
+<p>Now we will create a canvas for the animation using matplotlib <code class="language-plaintext highlighter-rouge">figure </code>and <code class="language-plaintext highlighter-rouge">axis</code>. Then we have created the bar plot in which each bar will represent one number of the array. Here <code class="language-plaintext highlighter-rouge">text()</code> is used to show the number of operations on the canvas. The first two arguments are the position of the label.<code class="language-plaintext highlighter-rouge">transform=ax.transAxes</code> tells that the first two arguments are the axis fractions, not data coordinates.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+<span class="n">bar_rec</span> <span class="o">=</span> <span class="n">ax</span><span class="p">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="p">)),</span> <span class="n">array</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s">'edge'</span><span class="p">)</span>
+<span class="n">text</span> <span class="o">=</span> <span class="n">ax</span><span class="p">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="s">""</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="p">.</span><span class="n">transAxes</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">update_plot</code> function is used to update the figure for each frame of our animation. Actually, this function will pass to <code class="language-plaintext highlighter-rouge">anima.FuncAnimamtion() </code>that uses it to update the plot. Here we have passed the input array, <code class="language-plaintext highlighter-rouge">rec </code>which is defined above, and the epochs that keep the track of number of operations performed. One may think that we can simply use integer value instead of a list in epochs but integer like <code class="language-plaintext highlighter-rouge">epoch = 0</code> cannot be passed by reference but only by value, unlike a list, which is passed by reference. The <code class="language-plaintext highlighter-rouge">set_height()</code> is used to update height of each bar.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">epochs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">def</span> <span class="nf">update_plot</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">rec</span><span class="p">,</span> <span class="n">epochs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">rec</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rec</span><span class="p">,</span> <span class="n">array</span><span class="p">):</span>
+        <span class="n">rec</span><span class="p">.</span><span class="n">set_height</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="n">epochs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">text</span><span class="p">.</span><span class="n">set_text</span><span class="p">(</span><span class="s">"No.of operations :{}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">epochs</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</code></pre></div></div>
+
+<p>In the end, we create <code class="language-plaintext highlighter-rouge">anima</code> object in which we pass <code class="language-plaintext highlighter-rouge">frames=algo </code>that takes generator function(algo is generator function as it contains yield ) and after that, it passes the generated or updated array to the <code class="language-plaintext highlighter-rouge">update_plot </code>,<code class="language-plaintext highlighter-rouge">fargs </code>takes additional arguments i.e. <code class="language-plaintext highlighter-rouge">epochs</code> and <code class="language-plaintext highlighter-rouge">bar_rec</code> and <code class="language-plaintext highlighter-rouge">interval</code> is the delay between each frame in milliseconds.</p>
+
+<p>And finally, we use <code class="language-plaintext highlighter-rouge">plt.show()</code> to plot the animated figure.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">anima</span> <span class="o">=</span> <span class="n">anim</span><span class="p">.</span><span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">update_plot</span><span class="p">,</span> <span class="n">fargs</span><span class="o">=</span><span class="p">(</span><span class="n">bar_rec</span><span class="p">,</span> <span class="n">epochs</span><span class="p">),</span> <span class="n">frames</span><span class="o">=</span><span class="n">algo</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Full code with all sorting algorithms is available in my<a href="https://github.com/PushkaraSharma/Visualize_DS"> <strong>Github</strong></a> repo. Check it out.</p>
+
+<p>And if you like this article, please let me know.</p>
+
+<p>Learn more about<a href="https://matplotlib.org/3.2.1/api/_as_gen/matplotlib.animation.FuncAnimation.html"> animationFunction</a></p>
+:ET
