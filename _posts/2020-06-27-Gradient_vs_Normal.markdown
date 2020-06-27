@@ -8,21 +8,21 @@ tags: [Machine Learning, Artificial Intelligence,Linear Regression, Supervised L
 ---
 ## Choosing the right algorithm to find the parameters that minimize the cost function
 
-![Gradient Descent v/s Normal Equation](https://miro.medium.com/max/1400/1*XmGwOm_Yxqqtb1_f-UXbuA.png)
+
 
 > #### **In this article, we will see the actual difference between gradient descent and the normal equation in a practical approach. Most of the newbie Machine learning Enthusiasts learn about gradient descent during the linear regression and move further without even knowing about the most underestimated Normal Equation that is far less complex and provides very good results for small to medium size datasets.**
 
-If you are new to machine learning, or not familiar with a **normal** **equation** or **gradient** **descent**, don’t worry I’ll try my best to explain these in **layman’s** terms. So, I will start by explaining a little about the regression problem.
+If you are new to machine learning, or not familiar with a **normal equation** or **gradient descent**, don’t worry I’ll try my best to explain these in **layman’s** terms. So, I will start by explaining a little about the regression problem.
 
 ## What is a Linear Regression?
 
-It is the entry-level **supervised **(both feature and target variables are given) machine learning algorithms. Suppose, we plot all these variables in the space, then the main task here is to **fit** the line in such a way that it **minimizes** the **cost function** or **loss**(don’t worry I’ll also explain this). There are various types of linear regression like a simple(one feature), multiple, and logistic(for classification). We have taken **multiple linear regression** in consideration for this article. The actual regression formula is:-
+It is the entry-level **supervised** (both feature and target variables are given) machine learning algorithms. Suppose, we plot all these variables in the space, then the main task here is to **fit** the line in such a way that it **minimizes** the **cost function** or **loss**(don’t worry I’ll also explain this). There are various types of linear regression like a simple(one feature), multiple, and logistic(for classification). We have taken **multiple linear regression** in consideration for this article. The actual regression formula is:-
 
-![img](https://miro.medium.com/max/30/1*VUROsVB0Fjd_wnWnKv0Fjw.png?q=20)
+![img](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_1.png)
 
-where **θ**₀ and **θ**₁ are the parameters that we have to find in such a way that they minimize the **loss**. In multiple regression, formula extended like **θ**₀+**θ**₁X₁+**θ**₂X₂. **Cost function** finds the error between the **actual value **and **predicted value** of our algorithm. It should be as minimum as possible. The formula for the same is:-
+where **θ**₀ and **θ**₁ are the parameters that we have to find in such a way that they minimize the **loss**. In multiple regression, formula extended like **θ**₀+**θ**₁X₁+**θ**₂X₂. **Cost function** finds the error between the **actual value** and **predicted value** of our algorithm. It should be as minimum as possible. The formula for the same is:-
 
-![img](https://miro.medium.com/max/30/1*4Vl6z2EolRUPcAzGZwE0vA.png?q=20)
+![img](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_2.png)
 
 where m=number of examples or rows in the dataset, xᶦ=feature values of iᵗʰ example, yᶦ=actual outcome of iᵗʰ example.
 
@@ -30,7 +30,7 @@ where m=number of examples or rows in the dataset, xᶦ=feature values of iᵗʰ
 
 It is an **optimization** technique to find the best combination of parameters that **minimize** the **cost function**. In this, we start with random values of parameters(in most cases **zero**) and then keep changing the parameters to reduce J(**θ**₀,**θ**₁) or cost function until end up at a minimum. The formula for the same is:-
 
-![img](https://miro.medium.com/max/30/1*lQ0iGTXb_h1_7P2rKtS3lQ.png?q=20)
+![img](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_3.png)
 
 where **j** represents the no. of the parameter, **α** represents the learning rate. I will not discuss it in depth. You can find handwritten notes for these [here](https://github.com/PushkaraSharma/medium_articles_code/tree/master/Gradientdescent_VS_NormalEquation).
 
@@ -38,7 +38,7 @@ where **j** represents the no. of the parameter, **α** represents the learning 
 
 It is an approach in which we can directly find the best values of parameters without using gradient descent. It is a very effective algorithm or ill say formula(as it consists of only one line 😆)when you are working with smaller datasets.
 
-![img](https://miro.medium.com/max/30/1*w6M0avkhKBzm15aH65ZL-w.png?q=20)
+![img](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_4.png)
 
 The only problem with the **normal equation** is that finding the **inverse** of the matrix is computational very expensive in large datasets.
 
@@ -46,7 +46,7 @@ That’s a lot of theory, I know but that was required to understand the followi
 
 # Prerequisites:
 
-I assume that you are familiar with **python** and already have installed the **python 3 **in your systems. I have used a **jupyter notebook **for this tutorial. You can use the **IDE** of your like. All required libraries come inbuilt in **anaconda** suite.
+I assume that you are familiar with **python** and already have installed the **python** **3** in your systems. I have used a **jupyter** **notebook** for this tutorial. You can use the **IDE** of your like. All required libraries come inbuilt in **anaconda** suite.
 
 # Let’s Code
 
@@ -72,9 +72,9 @@ print(df.shape)
 df.head()
 ```
 
-![Preview of the dataset used](https://miro.medium.com/max/30/1*oeFuqtzGhdHpGy6-l_CIxw.png?q=20)
+![Preview of the dataset used](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_5.png)
 
-Preview of the dataset used
+
 
 Here, **feature** values namely **Math** and **Reading** are saved in variables **X1** and **X2** as NumPy arrays whereas the **Writing** column is considered as a **target** variable and its values saved in the **Y** variable. Then we have plotted this 3D data.
 
@@ -85,9 +85,7 @@ Y = df['Writing'].valuesax = plt.axes(projection='3d')
 ax.scatter(X1, X2, Y, c=Y, cmap='viridis', linewidth=0.5);
 ```
 
-![Visualization of data in 3D](https://miro.medium.com/max/30/1*pXZHDFD_TTse17eizppYPA.png?q=20)
-
-Visualization of data in 3D
+![Visualization of data in 3D](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_6.png)
 
 Now, **X₀** is initialized as a numpy array that consists of ones with the same dimensions as other features(It acts like bias). After that, we grouped all features in a single variable and transpose them to be in the right format. Then the data is split into training and testing with the help of `train_test_split` and **test size** was **5%** that is **50 rows** for testing. The shapes are given in the screenshot below.
 
@@ -99,9 +97,9 @@ print("X_train shape:",x_train.shape,"\nY_train shape:",y_train.shape)
 print("X_test shape:",x_test.shape,"\nY_test shape:",y_test.shape)
 ```
 
-![Shapes of training, testing sets](https://miro.medium.com/max/30/1*bkh5Cvgl2hN9onprl010gw.png?q=20)
+![Shapes of training, testing sets](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_7.png)
 
-Shapes of training, testing sets
+##### Gradient Descent
 
 Here, **Q** denotes the list of parameters, which in our case are 3 (X₀, X₁, X₂), they are initialized as (0,0,0). **n** is just an integer with value equals to the number of training examples. Then we have defined our **cost function** that will be used in the **gradient descent** function to calculate the *cost* for every combination of parameters.
 
@@ -112,7 +110,7 @@ def cost_function(X,Y,Q):
     return np.sum(((X.dot(Q)-Y)**2)/(2*n))
 ```
 
-This is the **gradient descent **function which takes **features**, **target** variable, **parameters**, **epochs**(number of iterations), and **alpha**(learning rate) as arguments. In the function, `cost_history` is initialized to append the cost of every combination of parameters. After that, we started a loop to repeat the process of finding the parameters. Then we calculated the **loss** and the gradient term and updated the set of parameters. Here, you don't see the *partial derivative* term because the formula here is used after computing partial derivate(for reference, see the square term in the formula described above is canceled out with 2 in the denominator). At last, we call cost function to calculate the cost and append it in the `cost_history` .
+This is the **gradient** **descent** function which takes **features**, **target** variable, **parameters**, **epochs**(number of iterations), and **alpha**(learning rate) as arguments. In the function, `cost_history` is initialized to append the cost of every combination of parameters. After that, we started a loop to repeat the process of finding the parameters. Then we calculated the **loss** and the gradient term and updated the set of parameters. Here, you don't see the *partial derivative* term because the formula here is used after computing partial derivate(for reference, see the square term in the formula described above is canceled out with 2 in the denominator). At last, we call cost function to calculate the cost and append it in the `cost_history` .
 
 ```python
 def gradient_descent(X,Y,Q,epochs,alpha):
@@ -142,9 +140,7 @@ x = [i for i in range(1,1001)]
 plt.plot(x,cost_his)
 ```
 
-![Iteration V/S Cost](https://miro.medium.com/max/30/1*-t99JKn4Q3Med6mMk88-FA.png?q=20)
-
-Iteration V/S Cost
+![Iteration V/S Cost](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_8.png)
 
 It is time for testing. The `mean squared error` comes out to be around **3.86** which is very acceptable.
 
@@ -153,11 +149,9 @@ y_pred = x_test.dot(parameters)
 np.sqrt(mean_squared_error(y_pred,y_test))
 ```
 
-![Accuracy using Gradient Descent](https://miro.medium.com/max/30/1*-vQTNFRAvMhtU_ctBtKZaw.png?q=20)
+![Accuracy using Gradient Descent](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_9.png)
 
-Accuracy using Gradient Descent
-
-**Normal Equation**
+##### **Normal Equation**
 
 **Normal Equation** is very simple and you can see this in the code itself(only **single** line). As above, we have measured the time taken by the formula to calculate parameters. Don’t worry about the non-invertible matrix, NumPy covers all of them here. It takes around **3 milliseconds**(average). Isn’t it great!
 
@@ -175,13 +169,11 @@ pred_y = x_test.dot(Q1)
 np.sqrt(mean_squared_error(pred_y,y_test))
 ```
 
-![Accuracy using Normal Equation](https://miro.medium.com/max/30/1*0bk98vFDl7RGJfUfj8OOeQ.png?q=20)
+![Accuracy using Normal Equation](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_10.png)
 
-Accuracy using Normal Equation
+![Consider Normal Equation before Gradient Descent](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_11.gif)
 
-![Consider Normal Equation before Gradient Descent](https://miro.medium.com/freeze/max/30/1*71BJNVb2MYiwdlWkw3Xx6g.gif?q=20)
-
-Consider Normal Equation before Gradient Descent
+​                                       Consider Normal Equation before Gradient Descent
 
 # Conclusion
 
