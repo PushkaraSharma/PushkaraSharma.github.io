@@ -18,11 +18,11 @@ If you are new to machine learning, or not familiar with a **normal equation** o
 
 It is the entry-level **supervised** (both feature and target variables are given) machine learning algorithms. Suppose, we plot all these variables in the space, then the main task here is to **fit** the line in such a way that it **minimizes** the **cost function** or **loss**(don’t worry I’ll also explain this). There are various types of linear regression like a simple(one feature), multiple, and logistic(for classification). We have taken **multiple linear regression** in consideration for this article. The actual regression formula is:-
 
-![img](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_1.png)
+![img](/assets/img/post6_1.png)
 
 where **θ**₀ and **θ**₁ are the parameters that we have to find in such a way that they minimize the **loss**. In multiple regression, formula extended like **θ**₀+**θ**₁X₁+**θ**₂X₂. **Cost function** finds the error between the **actual value** and **predicted value** of our algorithm. It should be as minimum as possible. The formula for the same is:-
 
-![img](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_2.png)
+![img](/assets/img/post6_2.png)
 
 where m=number of examples or rows in the dataset, xᶦ=feature values of iᵗʰ example, yᶦ=actual outcome of iᵗʰ example.
 
@@ -30,7 +30,7 @@ where m=number of examples or rows in the dataset, xᶦ=feature values of iᵗʰ
 
 It is an **optimization** technique to find the best combination of parameters that **minimize** the **cost function**. In this, we start with random values of parameters(in most cases **zero**) and then keep changing the parameters to reduce J(**θ**₀,**θ**₁) or cost function until end up at a minimum. The formula for the same is:-
 
-![img](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_3.png)
+![img](/assets/img/post6_3.png)
 
 where **j** represents the no. of the parameter, **α** represents the learning rate. I will not discuss it in depth. You can find handwritten notes for these [here](https://github.com/PushkaraSharma/medium_articles_code/tree/master/Gradientdescent_VS_NormalEquation).
 
@@ -38,7 +38,7 @@ where **j** represents the no. of the parameter, **α** represents the learning 
 
 It is an approach in which we can directly find the best values of parameters without using gradient descent. It is a very effective algorithm or ill say formula(as it consists of only one line 😆)when you are working with smaller datasets.
 
-![img](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_4.png)
+![img](/assets/img/post6_4.png)
 
 The only problem with the **normal equation** is that finding the **inverse** of the matrix is computational very expensive in large datasets.
 
@@ -72,7 +72,7 @@ print(df.shape)
 df.head()
 ```
 
-![Preview of the dataset used](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_5.png)
+![Preview of the dataset used](/assets/img/post6_5.png)
 
 
 
@@ -85,7 +85,7 @@ Y = df['Writing'].valuesax = plt.axes(projection='3d')
 ax.scatter(X1, X2, Y, c=Y, cmap='viridis', linewidth=0.5);
 ```
 
-![Visualization of data in 3D](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_6.png)
+![Visualization of data in 3D](/assets/img/post6_6.png)
 
 Now, **X₀** is initialized as a numpy array that consists of ones with the same dimensions as other features(It acts like bias). After that, we grouped all features in a single variable and transpose them to be in the right format. Then the data is split into training and testing with the help of `train_test_split` and **test size** was **5%** that is **50 rows** for testing. The shapes are given in the screenshot below.
 
@@ -97,7 +97,7 @@ print("X_train shape:",x_train.shape,"\nY_train shape:",y_train.shape)
 print("X_test shape:",x_test.shape,"\nY_test shape:",y_test.shape)
 ```
 
-![Shapes of training, testing sets](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_7.png)
+![Shapes of training, testing sets](/assets/img/post6_7.png)
 
 ##### Gradient Descent
 
@@ -140,7 +140,7 @@ x = [i for i in range(1,1001)]
 plt.plot(x,cost_his)
 ```
 
-![Iteration V/S Cost](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_8.png)
+![Iteration V/S Cost](/assets/img/post6_8.png)
 
 It is time for testing. The `mean squared error` comes out to be around **3.86** which is very acceptable.
 
@@ -149,7 +149,7 @@ y_pred = x_test.dot(parameters)
 np.sqrt(mean_squared_error(y_pred,y_test))
 ```
 
-![Accuracy using Gradient Descent](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_9.png)
+![Accuracy using Gradient Descent](/assets/img/post6_9.png)
 
 ##### **Normal Equation**
 
@@ -169,7 +169,7 @@ pred_y = x_test.dot(Q1)
 np.sqrt(mean_squared_error(pred_y,y_test))
 ```
 
-![Accuracy using Normal Equation](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_10.png)
+![Accuracy using Normal Equation](/assets/img/post6_10.png)
 
 ![Consider Normal Equation before Gradient Descent](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_11.gif)
 
