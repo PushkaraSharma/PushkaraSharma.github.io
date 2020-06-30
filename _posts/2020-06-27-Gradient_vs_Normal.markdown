@@ -10,7 +10,7 @@ tags: [Machine Learning, Artificial Intelligence,Linear Regression, Supervised L
 
 
 
-> #### **In this article, we will see the actual difference between gradient descent and the normal equation in a practical approach. Most of the newbie Machine learning Enthusiasts learn about gradient descent during the linear regression and move further without even knowing about the most underestimated Normal Equation that is far less complex and provides very good results for small to medium size datasets.**
+> ### **In this article, we will see the actual difference between gradient descent and the normal equation in a practical approach. Most of the newbie Machine learning Enthusiasts learn about gradient descent during the linear regression and move further without even knowing about the most underestimated Normal Equation that is far less complex and provides very good results for small to medium size datasets.**
 
 If you are new to machine learning, or not familiar with a **normal equation** or **gradient descent**, don’t worry I’ll try my best to explain these in **layman’s** terms. So, I will start by explaining a little about the regression problem.
 
@@ -171,7 +171,7 @@ np.sqrt(mean_squared_error(pred_y,y_test))
 
 ![Accuracy using Normal Equation](/assets/img/post6_10.png)
 
-![Consider Normal Equation before Gradient Descent](/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post6_11.gif)
+![Consider Normal Equation before Gradient Descent](/assets/img/post6_11.gif)
 
 ​                                       Consider Normal Equation before Gradient Descent
 
