@@ -1,0 +1,164 @@
+I"�`<h2 id="choosing-the-right-algorithm-to-find-the-parameters-that-minimize-the-cost-function">Choosing the right algorithm to find the parameters that minimize the cost function</h2>
+
+<blockquote>
+  <h3 id="in-this-article-we-will-see-the-actual-difference-between-gradient-descent-and-the-normal-equation-in-a-practical-approach-most-of-the-newbie-machine-learning-enthusiasts-learn-about-gradient-descent-during-the-linear-regression-and-move-further-without-even-knowing-about-the-most-underestimated-normal-equation-that-is-far-less-complex-and-provides-very-good-results-for-small-to-medium-size-datasets"><strong>In this article, we will see the actual difference between gradient descent and the normal equation in a practical approach. Most of the newbie Machine learning Enthusiasts learn about gradient descent during the linear regression and move further without even knowing about the most underestimated Normal Equation that is far less complex and provides very good results for small to medium size datasets.</strong></h3>
+</blockquote>
+
+<p>If you are new to machine learning, or not familiar with a <strong>normal equation</strong> or <strong>gradient descent</strong>, don’t worry I’ll try my best to explain these in <strong>layman’s</strong> terms. So, I will start by explaining a little about the regression problem.</p>
+
+<h2 id="what-is-a-linear-regression">What is a Linear Regression?</h2>
+
+<p>It is the entry-level <strong>supervised</strong> (both feature and target variables are given) machine learning algorithms. Suppose, we plot all these variables in the space, then the main task here is to <strong>fit</strong> the line in such a way that it <strong>minimizes</strong> the <strong>cost function</strong> or <strong>loss</strong>(don’t worry I’ll also explain this). There are various types of linear regression like a simple(one feature), multiple, and logistic(for classification). We have taken <strong>multiple linear regression</strong> in consideration for this article. The actual regression formula is:-</p>
+
+<p><img src="/assets/img/post6_1.png" alt="img" /></p>
+
+<p>where <strong>θ</strong>₀ and <strong>θ</strong>₁ are the parameters that we have to find in such a way that they minimize the <strong>loss</strong>. In multiple regression, formula extended like <strong>θ</strong>₀+<strong>θ</strong>₁X₁+<strong>θ</strong>₂X₂. <strong>Cost function</strong> finds the error between the <strong>actual value</strong> and <strong>predicted value</strong> of our algorithm. It should be as minimum as possible. The formula for the same is:-</p>
+
+<p><img src="/assets/img/post6_2.png" alt="img" /></p>
+
+<p>where m=number of examples or rows in the dataset, xᶦ=feature values of iᵗʰ example, yᶦ=actual outcome of iᵗʰ example.</p>
+
+<h2 id="gradient-descent">Gradient Descent</h2>
+
+<p>It is an <strong>optimization</strong> technique to find the best combination of parameters that <strong>minimize</strong> the <strong>cost function</strong>. In this, we start with random values of parameters(in most cases <strong>zero</strong>) and then keep changing the parameters to reduce J(<strong>θ</strong>₀,<strong>θ</strong>₁) or cost function until end up at a minimum. The formula for the same is:-</p>
+
+<p><img src="/assets/img/post6_3.png" alt="img" /></p>
+
+<p>where <strong>j</strong> represents the no. of the parameter, <strong>α</strong> represents the learning rate. I will not discuss it in depth. You can find handwritten notes for these <a href="https://github.com/PushkaraSharma/medium_articles_code/tree/master/Gradientdescent_VS_NormalEquation">here</a>.</p>
+
+<h2 id="normal-equation">Normal Equation</h2>
+
+<p>It is an approach in which we can directly find the best values of parameters without using gradient descent. It is a very effective algorithm or ill say formula(as it consists of only one line 😆)when you are working with smaller datasets.</p>
+
+<p><img src="/assets/img/post6_4.png" alt="img" /></p>
+
+<p>The only problem with the <strong>normal equation</strong> is that finding the <strong>inverse</strong> of the matrix is computational very expensive in large datasets.</p>
+
+<p>That’s a lot of theory, I know but that was required to understand the following code snippets. And I have only scratched the surface, so please google the above topics for in-depth knowledge.</p>
+
+<h1 id="prerequisites">Prerequisites:</h1>
+
+<p>I assume that you are familiar with <strong>python</strong> and already have installed the <strong>python</strong> <strong>3</strong> in your systems. I have used a <strong>jupyter</strong> <strong>notebook</strong> for this tutorial. You can use the <strong>IDE</strong> of your like. All required libraries come inbuilt in <strong>anaconda</strong> suite.</p>
+
+<h1 id="lets-code">Let’s Code</h1>
+
+<p>The dataset that I have used consists of <strong>3</strong> columns, two of them are considered as <strong>features</strong> and the other one as the <strong>target</strong> variable. Dataset available in <a href="https://github.com/PushkaraSharma/medium_articles_code/tree/master/Gradientdescent_VS_NormalEquation"><strong>GithHub</strong></a>.</p>
+
+<p>Firstly, we need to import the libraries that we will use in this study. Here, <code class="language-plaintext highlighter-rouge">numpy</code> is used to create NumPy arrays for training and testing data. <code class="language-plaintext highlighter-rouge">pandas</code> for making the data frame of the dataset and retrieving values easily. <code class="language-plaintext highlighter-rouge">matplotlib.pyplot</code> to plot the data like overall stock prices and predicted prices. <code class="language-plaintext highlighter-rouge">mpl_toolkits</code> for plotting 3d data, <code class="language-plaintext highlighter-rouge">sklearn</code> for splitting dataset and calculating accuracy. We have also imported <code class="language-plaintext highlighter-rouge">time</code> to calculate the time taken by each algorithm.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits</span> <span class="kn">import</span> <span class="n">mplot3d</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">import</span> <span class="nn">time</span>
+</code></pre></div></div>
+
+<p>We have loaded the dataset into the <strong>pandas</strong> <code class="language-plaintext highlighter-rouge">dataframe</code>and the shape of dataset comes out to be <strong>(1000,3)</strong>, then we simply print the first <strong>5</strong> rows with <code class="language-plaintext highlighter-rouge">head()</code> .</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'student.csv'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/post6_5.png" alt="Preview of the dataset used" /></p>
+
+<p>Here, <strong>feature</strong> values namely <strong>Math</strong> and <strong>Reading</strong> are saved in variables <strong>X1</strong> and <strong>X2</strong> as NumPy arrays whereas the <strong>Writing</strong> column is considered as a <strong>target</strong> variable and its values saved in the <strong>Y</strong> variable. Then we have plotted this 3D data.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">X1</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s">'Math'</span><span class="p">].</span><span class="n">values</span>
+<span class="n">X2</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s">'Reading'</span><span class="p">].</span><span class="n">values</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s">'Writing'</span><span class="p">].</span><span class="n">valuesax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s">'3d'</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'viridis'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/post6_6.png" alt="Visualization of data in 3D" /></p>
+
+<p>Now, <strong>X₀</strong> is initialized as a numpy array that consists of ones with the same dimensions as other features(It acts like bias). After that, we grouped all features in a single variable and transpose them to be in the right format. Then the data is split into training and testing with the help of <code class="language-plaintext highlighter-rouge">train_test_split</code> and <strong>test size</strong> was <strong>5%</strong> that is <strong>50 rows</strong> for testing. The shapes are given in the screenshot below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">X0</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X1</span><span class="p">))</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="n">X0</span><span class="p">,</span><span class="n">X1</span><span class="p">,</span><span class="n">X2</span><span class="p">]).</span><span class="n">T</span>
+<span class="n">x_train</span><span class="p">,</span><span class="n">x_test</span><span class="p">,</span><span class="n">y_train</span><span class="p">,</span><span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">test_size</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"X_train shape:"</span><span class="p">,</span><span class="n">x_train</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span><span class="s">"</span><span class="se">\n</span><span class="s">Y_train shape:"</span><span class="p">,</span><span class="n">y_train</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"X_test shape:"</span><span class="p">,</span><span class="n">x_test</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span><span class="s">"</span><span class="se">\n</span><span class="s">Y_test shape:"</span><span class="p">,</span><span class="n">y_test</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/post6_7.png" alt="Shapes of training, testing sets" /></p>
+
+<h5 id="gradient-descent-1">Gradient Descent</h5>
+
+<p>Here, <strong>Q</strong> denotes the list of parameters, which in our case are 3 (X₀, X₁, X₂), they are initialized as (0,0,0). <strong>n</strong> is just an integer with value equals to the number of training examples. Then we have defined our <strong>cost function</strong> that will be used in the <strong>gradient descent</strong> function to calculate the <em>cost</em> for every combination of parameters.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X1</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">cost_function</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Q</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(((</span><span class="n">X</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span><span class="o">-</span><span class="n">Y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>This is the <strong>gradient</strong> <strong>descent</strong> function which takes <strong>features</strong>, <strong>target</strong> variable, <strong>parameters</strong>, <strong>epochs</strong>(number of iterations), and <strong>alpha</strong>(learning rate) as arguments. In the function, <code class="language-plaintext highlighter-rouge">cost_history</code> is initialized to append the cost of every combination of parameters. After that, we started a loop to repeat the process of finding the parameters. Then we calculated the <strong>loss</strong> and the gradient term and updated the set of parameters. Here, you don’t see the <em>partial derivative</em> term because the formula here is used after computing partial derivate(for reference, see the square term in the formula described above is canceled out with 2 in the denominator). At last, we call cost function to calculate the cost and append it in the <code class="language-plaintext highlighter-rouge">cost_history</code> .</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">gradient_descent</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Q</span><span class="p">,</span><span class="n">epochs</span><span class="p">,</span><span class="n">alpha</span><span class="p">):</span>
+    <span class="n">cost_history</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">epochs</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">X</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">pred</span><span class="o">-</span><span class="n">Y</span>
+        <span class="n">gradient</span> <span class="o">=</span> <span class="n">X</span><span class="p">.</span><span class="n">T</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span><span class="o">/</span><span class="n">n</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">-</span><span class="n">gradient</span><span class="o">*</span><span class="n">alpha</span>
+        <span class="n">cost_history</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cost_function</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Q</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cost_history</span><span class="p">,</span><span class="n">Q</span>
+</code></pre></div></div>
+
+<p>Here, we have started the <strong>timer</strong> before calling the above function and set <strong>epochs =1000</strong> and <strong>alpha =0.0001</strong>(should be low as possible) and the timer stops just after the execution of the function. So our <strong>gradient descent</strong> takes around <strong>82 milliseconds</strong> for execution(1000 epochs).</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">cost_his</span><span class="p">,</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">gradient_descent</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">.</span><span class="n">flatten</span><span class="p">(),</span><span class="n">Q</span><span class="p">,</span><span class="mi">1000</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">)</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Here, we plotted the graph for <code class="language-plaintext highlighter-rouge">cost_history</code> . As we can see the graph converges at around <strong>400</strong> epochs, so I run the gradient descent function with epochs=400, and this time it takes around <strong>25.3 milliseconds</strong>. You can test this yourself by using the notebook from my <a href="https://github.com/PushkaraSharma/medium_articles_code/tree/master/Gradientdescent_VS_NormalEquation"><strong>GitHub</strong></a>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1001</span><span class="p">)]</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">cost_his</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/post6_8.png" alt="Iteration V/S Cost" /></p>
+
+<p>It is time for testing. The <code class="language-plaintext highlighter-rouge">mean squared error</code> comes out to be around <strong>3.86</strong> which is very acceptable.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">y_pred</span> <span class="o">=</span> <span class="n">x_test</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+<span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span><span class="n">y_test</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/post6_9.png" alt="Accuracy using Gradient Descent" /></p>
+
+<h5 id="normal-equation-1"><strong>Normal Equation</strong></h5>
+
+<p><strong>Normal Equation</strong> is very simple and you can see this in the code itself(only <strong>single</strong> line). As above, we have measured the time taken by the formula to calculate parameters. Don’t worry about the non-invertible matrix, NumPy covers all of them here. It takes around <strong>3 milliseconds</strong>(average). Isn’t it great!</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">Q1</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">inv</span><span class="p">(</span><span class="n">x_train</span><span class="p">.</span><span class="n">T</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x_train</span><span class="p">)).</span><span class="n">dot</span><span class="p">(</span><span class="n">x_train</span><span class="p">.</span><span class="n">T</span><span class="p">).</span><span class="n">dot</span><span class="p">(</span><span class="n">y_train</span><span class="p">)</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Finally, we have calculated the <code class="language-plaintext highlighter-rouge">mean squared error</code>of Normal Equation which comes out to be <strong>3.68</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pred_y</span> <span class="o">=</span> <span class="n">x_test</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Q1</span><span class="p">)</span>
+<span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">pred_y</span><span class="p">,</span><span class="n">y_test</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/post6_10.png" alt="Accuracy using Normal Equation" /></p>
+
+<p><img src="/assets/img/post6_11.gif" alt="Consider Normal Equation before Gradient Descent" /></p>
+
+<p>​                                       Consider Normal Equation before Gradient Descent</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>It turns out that <strong>Normal Equation</strong> takes less time to compute the parameters and gives almost similar results in terms of accuracy, also it is quite easy to use. According to me, the <strong>Normal Equation</strong> is better than <strong>Gradient Descent</strong> if the dataset size is not too large<strong>(~20,000).</strong> Due to the good computing capacity of today’s modern systems, the Normal Equation is the first algorithm to consider in cases of regression.</p>
+
+<p>The source code is available on <a href="https://github.com/PushkaraSharma/medium_articles_code/tree/master/Gradientdescent_VS_NormalEquation"><strong>GitHub</strong></a>. Please feel free to make improvements.</p>
+
+<p>Thank you for your precious time.😊And I hope you like this tutorial.</p>
+:ET
