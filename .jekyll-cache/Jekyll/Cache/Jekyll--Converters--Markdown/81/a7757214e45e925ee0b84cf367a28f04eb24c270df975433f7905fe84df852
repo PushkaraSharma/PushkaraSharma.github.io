@@ -1,51 +1,51 @@
-I"0;<h2 id="applying-logistic-regression-to-a-multi-feature-dataset-using-only-python-step-by-step-implementation-coding-samples-in-python">Applying Logistic regression to a multi-feature dataset using only Python. Step-by-step implementation coding samples in Python</h2>
+I";<h2 id="applying-logistic-regression-to-a-multi-feature-dataset-using-only-python-step-by-step-implementation-coding-samples-in-python">Applying Logistic regression to a multi-feature dataset using only Python. Step-by-step implementation coding samples in Python</h2>
 
 <blockquote>
   <h3 id="in-this-article-we-will-build-a-logistic-regression-model-for-classifying-whether-a-patient-has-diabetes-or-not-the-main-focus-here-is-that-we-will-only-use-python-to-build-functions-for-reading-the-file-normalizing-data-optimizing-parameters-and-more-so-you-will-be-getting-in-depth-knowledge-of-how-everything-from-reading-the-file-to-make-predictions-works">In this article, we will build a <strong>logistic</strong> <strong>regression</strong> model for classifying whether a patient has diabetes or not. The main focus here is that we will only use <strong>python</strong> to build functions for reading the file, normalizing data, optimizing parameters, and more. So you will be getting in-depth knowledge of how everything from reading the file to make predictions works.</h3>
 
 </blockquote>
 
-<p>If you are new to machine learning, or not familiar with <strong>logistic regression</strong> or <strong>gradient</strong> <strong>descent</strong>, don’t worry I’ll try my best to explain these in <strong>layman’s</strong> terms. There are more tutorials out there that explain the same concepts. But what makes this tutorial unique is its <strong>short</strong> and <strong>beginners friendly</strong> high-level description of the code snippets. So, let’s start by looking at some theoretical concepts that are important in order to understand the working of our model.</p>
+<h2 id="if-you-are-new-to-machine-learning-or-not-familiar-with-logistic-regression-or-gradient-descent-dont-worry-ill-try-my-best-to-explain-these-in-laymans-terms-there-are-more-tutorials-out-there-that-explain-the-same-concepts-but-what-makes-this-tutorial-unique-is-its-short-and-beginners-friendly-high-level-description-of-the-code-snippets-so-lets-start-by-looking-at-some-theoretical-concepts-that-are-important-in-order-to-understand-the-working-of-our-model">If you are new to machine learning, or not familiar with <strong>logistic regression</strong> or <strong>gradient</strong> <strong>descent</strong>, don’t worry I’ll try my best to explain these in <strong>layman’s</strong> terms. There are more tutorials out there that explain the same concepts. But what makes this tutorial unique is its <strong>short</strong> and <strong>beginners friendly</strong> high-level description of the code snippets. So, let’s start by looking at some theoretical concepts that are important in order to understand the working of our model.</h2>
 
 <h2 id="logistic-regression"><strong>Logistic Regression</strong></h2>
 
 <p>Logistic Regression is the entry-level <strong>supervised</strong> machine learning algorithm used for <strong>classification</strong> purposes. It is one of those algorithms that everyone should be aware of. Logistic Regression is somehow similar to linear regression but it has different <strong>cost</strong> <strong>function</strong> and <strong>prediction</strong> <strong>function</strong>(hypothesis).</p>
 
-<p><img src="/PushkaraSharma.github.io/assets/img/post7_2.png" alt="" /></p>
+<p><img src="/assets/img/post7_2.png" alt="" /></p>
 
 <h2 id="sigmoid-function">Sigmoid function</h2>
 
 <p>It is the activation function that <strong>squeezes</strong> the output of the function in the range between <strong>0</strong> and <strong>1</strong> where values less than 0.5 represent class 0 and values greater than or equal to 0.5 represents class 1.</p>
 
-<p><img src="/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post7_3.png" alt="" /></p>
+<p><img src="/assets/img/post7_3.png" alt="" /></p>
 
 <h2 id="cost-function">Cost Function</h2>
 
 <p><strong>Cost function</strong> finds the error between the <strong>actual value **and **predicted value</strong> of our algorithm. It should be as minimum as possible. In the case of linear regression, the formula is:-</p>
 
-<p><img src="/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post7_4.png" alt="" /></p>
+<p><img src="/assets/img/post7_4.png" alt="" /></p>
 
 <p>But this formula <strong>cannot</strong> be used for <strong>logistic</strong> <strong>regression</strong> because the hypothesis here is a <strong>nonconvex</strong> function that means there are chances of finding the local minima and thus avoiding the global minima. If we use the same formula then our plot will look like this:-</p>
 
-<p><img src="/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post7_5.jpeg" alt="" /></p>
+<p><img src="/assets/img/post7_5.jpeg" alt="" /></p>
 
-<p>​                                                                                    nonconvex plot</p>
+<p>​</p>
 
 <p>So, in order to avoid this, we have <strong>smoothened</strong> the curve with the help of <strong>log</strong> and our cost function will look like this:-</p>
 
-<p><img src="/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post7_6.png" alt="" /></p>
+<p><img src="/assets/img/post7_6.png" alt="" /></p>
 
 <p>where m=number of examples or rows in the dataset, xᶦ=feature values of iᵗʰ example, yᶦ=actual outcome of iᵗʰ example. After using this, our plot for the cost function will look like this:-</p>
 
-<p><img src="/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post7_7.png" alt="" /></p>
+<p><img src="/assets/img/post7_7.png" alt="" /></p>
 
 <h2 id="gradient-descent">Gradient Descent</h2>
 
 <p>Our aim in any ML algorithm is to find the set of parameters that <strong>minimizes</strong> the <strong>cost</strong> <strong>function</strong>. And for automatically finding the best set of parameters we use optimization techniques. One of them is gradient descent. In this, we start with random values of parameters(in most cases <strong>zero</strong>) and then keep changing the parameters to reduce J(<strong>θ</strong>₀,<strong>θ</strong>₁) or cost function until we end up at a minimum. The formula for the same is:-</p>
 
-<p><img src="/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post7_8.png" alt="" /></p>
+<p><img src="/assets/img/post7_8.png" alt="" /></p>
 
-<p>​                                                                                 Gradient Descent</p>
+<p>​</p>
 
 <p>It looks exactly the same as that of linear regression but the difference is of the hypothesis(<strong>hθ(x)</strong>) as it uses <strong>sigmoid</strong> function as well.</p>
 
@@ -63,71 +63,83 @@
 
 <p>Firstly, we have defined the function <code class="language-plaintext highlighter-rouge">read_file</code>for reading the dataset itself. Here, the file is opened with <code class="language-plaintext highlighter-rouge">with</code> so we don’t have to close it and stored it in the reader variable. Then we loop over <code class="language-plaintext highlighter-rouge">reader</code> and append each line in the list named <strong>dataset</strong>. But the loaded data is of string format as shown in screenshot below.</p>
 
-<p><img src="/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post7_9.png" alt="" /></p>
+<script src="https://gist.github.com/PushkaraSharma/858a06dc09a1ef725b1b413dbbd88e00.js"></script>
 
-<p>​                                                                               Data after reading CSV</p>
+<p><img src="/assets/img/post7_9.png" alt="" /></p>
+
+<p>​</p>
 
 <h2 id="convert-string-to-float">Convert String to Float</h2>
 
 <p>The <code class="language-plaintext highlighter-rouge">string_to_float</code> function here helps to convert all string values to float in order to perform calculations on it. We simply loop on each row and column and convert every entry from string to float.</p>
 
-<p><img src="/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post7_10.png" alt="" /></p>
+<script src="https://gist.github.com/PushkaraSharma/b538755390707a99d7849aa8437feeaa.js"></script>
 
-<p>​                                                                     Data converted to float</p>
+<p><img src="/assets/img/post7_10.png" alt="" /></p>
 
 <h2 id="find-min-max">Find Min Max</h2>
 
 <p>Now, in order to perform <strong>normalization</strong> or getting all values on the same scale, we have to find the <strong>minimum</strong> and <strong>maximum</strong> values from each column. Here in function, we have loop column-wise and append the max and min of every column in <code class="language-plaintext highlighter-rouge">minmax</code> list. Obtained values are shown in the screenshot below.</p>
 
-<p><img src="/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post7_11.png" alt="" /></p>
+<script src="https://gist.github.com/PushkaraSharma/4cadb0b870faa0cf8ca448e3867c4f06.js"></script>
 
-<p>​                                                                     Min Max of every column</p>
+<p><img src="/assets/img/post7_11.png" alt="" /></p>
 
 <h2 id="normalization">Normalization</h2>
 
 <p>Now, we have looped over every value in the dataset and subtract minimum value (of that column) from it and divide it with the difference of <strong>max</strong> and <strong>min</strong> of that column. The screenshot below represents the normalized values of a single row example.</p>
 
-<p><img src="/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post7_12.png" alt="" /></p>
+<script src="https://gist.github.com/PushkaraSharma/cce8273fad6839d99eabfff52c67e5f0.js"></script>
 
-<p>​                                                          Single row values after normalization</p>
+<p><img src="/assets/img/post7_12.png" alt="" /></p>
 
-<p><strong>Train Test Split</strong></p>
+<p>​</p>
+
+<h2 id="train-test-split"><strong>Train Test Split</strong></h2>
 
 <p>Here, <code class="language-plaintext highlighter-rouge">train_test</code> function helps to create training and testing datasets. We have used <code class="language-plaintext highlighter-rouge">shuffle</code> from random module to shuffle the whole dataset. Then we slice the dataset to 80% and store it in <code class="language-plaintext highlighter-rouge">train_data</code> and the remaining 20% in <code class="language-plaintext highlighter-rouge">test_data</code> . The size of both sets is shown below.</p>
 
-<p><img src="/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post7_13.png" alt="" /></p>
+<script src="https://gist.github.com/PushkaraSharma/9a0d0a5d860a2c23a9a8eb300729be99.js"></script>
 
-<p>​                                                                          Size of train and test set</p>
+<p><img src="/assets/img/post7_13.png" alt="" /></p>
 
 <h2 id="accuracy">Accuracy</h2>
 
 <p>This <code class="language-plaintext highlighter-rouge">accuracy_check</code> function will be used to check the accuracy of our model. Here, we simply looped over the length of the actual or predicted list as both are of the same length and if the value at the current index of both are same, we increase the count <code class="language-plaintext highlighter-rouge">c</code> . Then just divide that count <code class="language-plaintext highlighter-rouge">c</code> with the length of the actual or predicted list and multiply by 100 to get the accuracy %.</p>
 
+<script src="https://gist.github.com/PushkaraSharma/29e006cde5e73fd8a9ec3ab3ef3dd303.js"></script>
+
 <h2 id="prediction-or-hypothesis-function">Prediction or Hypothesis Function</h2>
 
 <p>Yes, here we have imported <code class="language-plaintext highlighter-rouge">numpy</code> to calculate dot product but function for that can also be made. <code class="language-plaintext highlighter-rouge">math</code> for calculating exponential. The <code class="language-plaintext highlighter-rouge">prediction</code> function is our hypothesis function that takes the whole row and parameters as arguments. We have then initialized hypothesis variable with θo and we looped over every row element ignoring the last as it is the target <code class="language-plaintext highlighter-rouge">y</code> variable and added xᵢ*θ(i+1) (i+1 is in subscript) to hypothesis variable. After that, comes the <code class="language-plaintext highlighter-rouge">sigmoid</code> function 1/(1+exp(-hypothesis)) that squeezes the value in the range of 0–1.</p>
+
+<script src="https://gist.github.com/PushkaraSharma/31a6541651998f011ac7d58ce91c72ff.js"></script>
 
 <h2 id="cost-function-1">Cost Function</h2>
 
 <p>We don’t necessarily need this function to get our model worked but it is good to calculate the cost with every iteration and plot that. In<code class="language-plaintext highlighter-rouge">cost_function</code> we have looped over every row in the dataset and calculated <code class="language-plaintext highlighter-rouge">cost</code>of that row with the formula described above then add it to the cost variable. Finally, the average cost is returned.</p>
 
+<script src="https://gist.github.com/PushkaraSharma/1ba3f0ee2a75cca88c2ef126a9ad1a93.js"></script>
+
 <h2 id="optimization-technique">Optimization Technique</h2>
 
 <p>Here, we have used <code class="language-plaintext highlighter-rouge">gradient_descent</code> for automatically finding the best set of parameters for our model. This function takes <strong>dataset</strong>, <strong>epochs</strong>(number of iterations), and <strong>alpha</strong>(learning rate) as arguments. In the function, <code class="language-plaintext highlighter-rouge">cost_history</code> is initialized to append the cost after every epoch and <code class="language-plaintext highlighter-rouge">parameters</code>to hold the set of parameters(no. of paramters=features+1). After that, we started a loop to repeat the process of finding the parameters. The inner loop is used to iterate over every row in the dataset. Here gradient term is different for θo due to partial derivative of the cost function, that’s why it is calculated separately and added to 0th position in parameters list, then other parameters are calculated using other feature values of row(ignoring last target value) and added to their respective position in the parameters list. The same process repeats for every row. After that 1 epoch is completed and <code class="language-plaintext highlighter-rouge">cost_function</code> is called with the calculated set of parameters and the value obtained is appended to <code class="language-plaintext highlighter-rouge">cost_history</code> .</p>
+
+<script src="https://gist.github.com/PushkaraSharma/a5b9af946267589ee754377c60d138f5.js"></script>
 
 <h2 id="combining-algorithm">Combining Algorithm</h2>
 
 <p>Here, we have imported <code class="language-plaintext highlighter-rouge">matplotlib.pyplot</code> just to draw the cost plot. So it is not necessary. In <code class="language-plaintext highlighter-rouge">algorithm</code> function, we are calling the <code class="language-plaintext highlighter-rouge">gradient_descent</code> with epochs=<strong>1000</strong> and learning_rate = <strong>0.001</strong>. After that, making predictions on our testing dataset. <code class="language-plaintext highlighter-rouge">round</code> is used to round off the obtained predicted values(i.e. 0.7=1,0.3=0). Then, <code class="language-plaintext highlighter-rouge">accuracy_check</code> is called to get the accuracy of the model. At last, we have plotted the iterations v/s cost plot.</p>
 
+<script src="https://gist.github.com/PushkaraSharma/0f07d3273700d10cb4cc01e31eec06ae.js"></script>
+
 <h2 id="putting-everything-together">Putting Everything Together</h2>
 
 <p>Just to have a proper structure, we have put all the functions in a single <code class="language-plaintext highlighter-rouge">combine</code> function. We were able to achieve an accuracy of around **78.5% **which can be further improved by hyper tuning the model. The plot below also proves that our model is working correctly as cost is decreasing with an increase in the number of iterations.</p>
 
-<p>https://gist.github.com/PushkaraSharma/4b499258590f8a73c5cab2da9aa344e5</p>
+<script src="https://gist.github.com/PushkaraSharma/4b499258590f8a73c5cab2da9aa344e5.js"></script>
 
-<p><img src="/home/pushkara/Desktop/portfolio/PushkaraSharma.github.io/assets/img/post7_14.png" alt="" /></p>
-
-<p>​                                                                             iterations v/s cost</p>
+<p><img src="/assets/img/post7_14.png" alt="" /></p>
 
 <h1 id="conclusion">Conclusion</h1>
 

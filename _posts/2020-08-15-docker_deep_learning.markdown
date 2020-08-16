@@ -1,16 +1,16 @@
 ---
 layout: post
 title: Safest Way To Containerize a Deep Learning Flask API
-date: 2020-08-15 21:54:34 +0300
+date: 2020-08-15 21:44:34 +0300
 description: Building and Pushing a Docker Image of a Deep Learning Flask API in the Safest way possible. # Add post description (optional)
 img: post8_1.png # Add image post (optional)
 tags: [Deep Learning, Artificial Intelligence,Docker MLOps]
 ---
-# Building and Pushing a Docker Image of a Deep Learning Flask API in the Safest way possible.
+### **Building and Pushing a Docker Image of a Deep Learning Flask API in the Safest way possible.**
 
 
 
-> ## **In this article, we will not discuss developing Machine Learning model but rather containerizing our ready to deploy **ML API (Flask) with the help of **Docker** so that there is no hassle that our model is not working in the production environment or while deploying it on cloud or simply sharing the working model to friends and colleagues.
+> ## In this article, we will not discuss developing Machine Learning model but rather containerizing our ready to deploy ML API (Flask) with the help of Docker so that there is no hassle that our model is not working in the production environment or while deploying it on cloud or simply sharing the working model to friends and colleagues.
 
 
 
@@ -22,7 +22,7 @@ Firstly, I assume that if you are reading this article you may be already famili
 
 **Docker** is the tool that allows us to set up the whole OS-level virtualization to develop and share the project in packages known as **Docker Images**. Then either these images are shared manually(difficult way) or simply push these images on to the DockerHub and pull whenever required.
 
-When these images run on the systems than they are known as **Docker containers**. So, the **container** is a running instance of the Docker **image. **In more layman’s terms, images are considered as classes and containers as objects.
+When these images run on the systems than they are known as **Docker containers**. So, the **container** is a running instance of the **Docker image**. In more layman’s terms, images are considered as classes and containers as objects.
 
 ## Prerequisites
 
@@ -45,7 +45,7 @@ torch==1.5.1
 
 For making the docker image of our project, we first have to choose a base image, most of the articles that I follow used **alpine** for this because it is light-weight but that seems to cause a problem in python and pip installation in my case, that’s why I choose **ubuntu**(more trusted and comfortable with).
 
-This file should be named as **Dockerfile.txt **and should be present in the root directory of your project. **FROM** command will pull the base image that acts as **OS** for our image. The next command **COPY** will copy all data to the folder named app. **RUN** is used to run any command in our docker image. Here we have updated and upgraded our ubuntu and installed `python 3` and `pip3` to install python packages. Then we have used **RUN** command to install all dependencies present in `requirements.txt` (Note:- Here I have used `default-timeout=100` in order to avoid waiting for connection type of error). Then we have used **WORKDIR** to set our working directory that is the`app` folder and we have used **EXPOSE **to informs **Docker** that the container listens on the port 5000 at runtime. And Finally, to run our program file i.e. `flask_api.py` automatically whenever the image is initialized we have used **CMD** that runs default executables.
+This file should be named as **Dockerfile.txt** and should be present in the root directory of your project. **FROM** command will pull the base image that acts as **OS** for our image. The next command **COPY** will copy all data to the folder named app. **RUN** is used to run any command in our docker image. Here we have updated and upgraded our ubuntu and installed `python 3` and `pip3` to install python packages. Then we have used **RUN** command to install all dependencies present in `requirements.txt` (Note:- Here I have used `default-timeout=100` in order to avoid waiting for connection type of error). Then we have used **WORKDIR** to set our working directory that is the`app` folder and we have used **EXPOSE** to informs **Docker** that the container listens on the port 5000 at runtime. And Finally, to run our program file i.e. `flask_api.py` automatically whenever the image is initialized we have used **CMD** that runs default executables.
 
 ```bash
 FROM ubuntu:18.04
@@ -57,7 +57,7 @@ EXPOSE 5000
 CMD python3 /app/flask_api.py
 ```
 
-Now, just run the command given below to start building your Docker Image. Here, `deep_learning_api` is the name of the image, and **1.0** is the tag. Also, remember to copy that dot(.) in the end. 😆
+Now, just run the command given below to start building your Docker Image. Here, `deep_learning_api` is the name of the image, and **1.0** is the tag. Also, remember to copy that dot (**.**) in the end. 😆
 
 ```bash
 sudo docker build -t deep_learning_api:1.0 .
@@ -71,7 +71,7 @@ After running this command, relax and see the whole process. If you encounter an
 
 ![](/assets/img/post8_3.png)
 
-Your Docker Image is successfully built. But is it working correctly? Let's find out. Run the following command to get an  image id. Copy the **image id **of your recently built image**. **In my case it is **574f233e0957.**
+Your Docker Image is successfully built. But is it working correctly? Let's find out. Run the following command to get an  image id. Copy the image id of your recently built image. In my case it is 574f233e0957.
 
 ```bash
 sudo docker images
@@ -131,7 +131,7 @@ From now onwards, you can simply pull your docker image with `pull`command.
 
 **Note:-** Your repo is public by default and as an unpaid user you get only one private repo.
 
-Hopefully, you have successfully built a Docker image of your Deep Learning Flask API. If you still encounter any kind of error, feel free to contact me. I will be more than happy to help anyone. 😃
+Hopefully, you have successfully built a Docker image of your Deep Learning Flask API. If you still encounter any kind of error, feel free to contact me. I will be more than happy to help anyone. 😃s
 
 The source code is available on [**GitHub**](https://github.com/PushkaraSharma/medium_articles_code/tree/master/Containerize_Deep_Learning_Docker).
 
