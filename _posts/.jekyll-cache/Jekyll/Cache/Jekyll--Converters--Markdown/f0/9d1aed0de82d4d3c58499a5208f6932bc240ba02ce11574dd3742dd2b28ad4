@@ -1,0 +1,199 @@
+I"�r<h2 id="a-great-article-to-understand-the-basics-of-sentimental-analysis-and-data-scraping-by-reviewing-movies">A great article to understand the basics of sentimental analysis and data scraping by reviewing movies</h2>
+
+<blockquote>
+  <h4 id="in-this-article-we-will-use-machine-learning-to-perform-sentimental-analysis-of-reviews-available-on-the-imdb-website-for-any-given-movie-and-then-decide-whether-to-watch-that-film-or-not-it-is-a-good-project-to-understand-the-basics-of-nlp-as-well-as-data-scraping-if-you-are-in-the-field-of-machine-learning-for-quite-a-long-time-then-most-probably-you-can-skip-this-tutorial"><strong><em>In this article, we will use machine learning to perform sentimental analysis of reviews available on the IMDB website for any given movie and then decide whether to watch that film or not. It is a good project to understand the basics of NLP as well as Data Scraping. If you are in the field of machine learning for quite a long time, then most probably you can skip this tutorial.</em></strong></h4>
+</blockquote>
+
+<p><img src="/assets/img/post3_1.png" alt="Sentimental Analysis with Web Scraping" /></p>
+
+<p>The work-flow or methodology that we will use consists of four main parts:</p>
+
+<ul>
+  <li>Installing all dependencies and required files</li>
+  <li>Model Development(Naive Bayes)</li>
+  <li>Scraping reviews of a particular movie</li>
+  <li>Predicting the sentiment of each review and deciding whether to watch it or not.</li>
+</ul>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>I’m assuming that you are familiar with the <strong><em>python</em></strong> programming language and you have python 3 installed in your system.</p>
+
+<h2 id="installing-required-packages">Installing required packages</h2>
+
+<p>You can simply use <code class="language-plaintext highlighter-rouge">pip install pakage_name</code> for the given packages. The packages that you need to install before start coding are:-</p>
+
+<ul>
+  <li><strong>selenium</strong> — for web scraping and automating the scrolling of the website. In selenium, you also need to download <a href="https://sites.google.com/a/chromium.org/chromedriver/downloads">chomedriver.exe</a> for using chrome automatically.</li>
+  <li><strong>nltk</strong> — for performing natural language processing tasks and model training.</li>
+  <li><strong>bs4</strong> — for BeautifulSoup that is used for parsing HTML page.</li>
+  <li><strong>lxml</strong> — it is the package that is used to process HTML and XML with python.</li>
+  <li><strong>urllib</strong> — for requesting a web page.</li>
+  <li><strong>sklearn(optional)</strong> — Used for saving the trained model.</li>
+</ul>
+
+<h1 id="lets-start-coding">Let’s Start Coding</h1>
+
+<p>Create a python file for training and predicting the reviews. Don’t worry, we will scrap these reviews later in a different file.</p>
+
+<h2 id="model-development">Model Development</h2>
+
+<p>Firstly, we have to download all the necessary data like <strong>movie_reviews</strong> on which our model will train and some other data like <code class="language-plaintext highlighter-rouge">stopwords</code>, <code class="language-plaintext highlighter-rouge">punkt</code> that nltk have used in our code. If <strong>nltk</strong> requires some more data then it will notify you with the error. The following lines will download the data.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">nltk</span>
+<span class="n">nltk</span><span class="p">.</span><span class="n">download</span><span class="p">(</span><span class="s">"punkt"</span><span class="p">)</span>
+<span class="n">nltk</span><span class="p">.</span><span class="n">download</span><span class="p">(</span><span class="s">"movie_reviews"</span><span class="p">)</span>
+<span class="n">nltk</span><span class="p">.</span><span class="n">download</span><span class="p">(</span><span class="s">"stopwords"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Now we will import all the required packages and files. Here, <strong><em>movie_reviews</em></strong> is our training and testing data, <strong><em>stopwords</em></strong>  are words like <code class="language-plaintext highlighter-rouge">is,the,of</code> that does not contribute to the training. We have used <strong><em>shuffle</em></strong> for shuffling training and testing data.  <strong><em>Naive-Bayes</em></strong> is the classifier mostly used for NLP(Natural Language Processing) . <strong><em>word_tokenizer</em></strong>  is used to divide the text into smaller parts called tokens.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">MAIN_scrap_movies_reviews</code> is our python file for scraping data and  <strong><em>reviews_extract</em></strong> is the function that performs that task.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">movie_reviews</span>
+<span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">shuffle</span>
+<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">from</span> <span class="nn">nltk</span> <span class="kn">import</span> <span class="n">NaiveBayesClassifier</span>
+<span class="kn">from</span> <span class="nn">nltk</span> <span class="kn">import</span> <span class="n">classify</span>
+<span class="kn">from</span> <span class="nn">nltk</span> <span class="kn">import</span> <span class="n">word_tokenize</span>
+<span class="kn">from</span> <span class="nn">MAIN_scrap_movies_reviews</span> <span class="kn">import</span> <span class="n">reviews_extract</span>
+<span class="kn">from</span> <span class="nn">sklearn.externals</span> <span class="kn">import</span> <span class="n">joblib</span>
+</code></pre></div></div>
+
+<p>The  <strong><em>bag_words()</em></strong> takes the review and removes stopwords and punctuations from it as they don’t contribute to the training of the model and return the dictionary with every word as key and true as the value.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">bag_words</span><span class="p">(</span><span class="n">words</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">stop_words</span>
+    <span class="n">stop_words</span> <span class="o">=</span> <span class="n">stopwords</span><span class="p">.</span><span class="n">words</span><span class="p">(</span><span class="s">'english'</span><span class="p">)</span>
+    <span class="n">clean</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stop_words</span> <span class="ow">and</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">string</span><span class="p">.</span><span class="n">punctuation</span><span class="p">:</span>
+            <span class="n">clean</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">dictionary</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([</span><span class="n">word</span><span class="p">,</span> <span class="bp">True</span><span class="p">]</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">clean</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dictionary</span>
+</code></pre></div></div>
+
+<p>We have created the function  <strong><em>TrainingAndTesting()</em></strong> that trains and check the accuracy of the model. There are two empty lists used to store positive and negative reviews. Then, we iterate in the movie_reviews column <code class="language-plaintext highlighter-rouge">fileids</code>and if it contains <code class="language-plaintext highlighter-rouge">pos</code>then that row or review is stored in a positive review list and vice versa. After that, we iterate through each review stored in <code class="language-plaintext highlighter-rouge">pos_reviews</code> and call the <strong><em>bag_words</em></strong> function that in turn gives the dictionary containing review words (removed stopwords and punctuations) and associate <code class="language-plaintext highlighter-rouge">pos</code>with it representing that this is the positive review. The same goes for negative reviews. Then we shuffle and split the data for training and testing. We have simply used <a href="https://www.geeksforgeeks.org/naive-bayes-classifiers/">NaiveBayes classifier</a> for this sentimental analysis. The training and testing are simple with inbuilt functions of nltk.</p>
+
+<p><img src="/assets/img/post3_2.gif" alt="Training with nltk is like magic" /></p>
+
+<p>​                                                                      Training with nltk is like magic</p>
+
+<p>The last line here is used to store the trained model so that there is no need to train the model every time you review the movie. Also you can simply return the classifier and use that instead in predicting phase.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">TrainingAndTesting</span><span class="p">():</span>
+    <span class="n">pos_review</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">neg_review</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">fileid</span> <span class="ow">in</span> <span class="n">movie_reviews</span><span class="p">.</span><span class="n">fileids</span><span class="p">(</span><span class="s">'pos'</span><span class="p">):</span>
+        <span class="n">pos_review</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">movie_reviews</span><span class="p">.</span><span class="n">words</span><span class="p">(</span><span class="n">fileid</span><span class="p">))</span>    <span class="k">for</span> <span class="n">fileid</span> <span class="ow">in</span> <span class="n">movie_reviews</span><span class="p">.</span><span class="n">fileids</span><span class="p">(</span><span class="s">'neg'</span><span class="p">):</span>
+        <span class="n">neg_review</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">movie_reviews</span><span class="p">.</span><span class="n">words</span><span class="p">(</span><span class="n">fileid</span><span class="p">))</span>    <span class="n">pos_set</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">pos_review</span><span class="p">:</span>
+        <span class="n">pos_set</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="n">bag_words</span><span class="p">(</span><span class="n">word</span><span class="p">),</span><span class="s">'pos'</span><span class="p">))</span>    <span class="n">neg_set</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">neg_review</span><span class="p">:</span>
+        <span class="n">neg_set</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="n">bag_words</span><span class="p">(</span><span class="n">word</span><span class="p">),</span><span class="s">'neg'</span><span class="p">))</span>    <span class="n">shuffle</span><span class="p">(</span><span class="n">pos_set</span><span class="p">)</span>
+    <span class="n">shuffle</span><span class="p">(</span><span class="n">neg_set</span><span class="p">)</span>
+    <span class="n">test_set</span> <span class="o">=</span> <span class="n">pos_set</span><span class="p">[:</span><span class="mi">200</span><span class="p">]</span><span class="o">+</span><span class="n">neg_set</span><span class="p">[:</span><span class="mi">200</span><span class="p">]</span>
+    <span class="n">train_set</span> <span class="o">=</span> <span class="n">pos_set</span><span class="p">[</span><span class="mi">200</span><span class="p">:]</span><span class="o">+</span><span class="n">neg_set</span><span class="p">[</span><span class="mi">200</span><span class="p">:]</span>    <span class="n">classifier</span> <span class="o">=</span> <span class="n">NaiveBayesClassifier</span><span class="p">.</span><span class="n">train</span><span class="p">(</span><span class="n">train_set</span><span class="p">)</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="n">classify</span><span class="p">.</span><span class="n">accuracy</span><span class="p">(</span><span class="n">classifier</span><span class="p">,</span><span class="n">test_set</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span>
+    <span class="n">joblib</span><span class="p">.</span><span class="n">dump</span><span class="p">(</span><span class="n">classifier</span><span class="p">,</span><span class="s">'imdb_movies_reviews.pkl'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Now we will create another file for scraping reviews from IMDB or also you can define the function in the same file.</p>
+
+<h2 id="scraping-reviews-of-a-particular-movie">Scraping reviews of a particular movie</h2>
+
+<p>Importing the required packages. Uses of all these are defined in the starting.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">selenium</span> <span class="kn">import</span> <span class="n">webdriver</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span> <span class="k">as</span> <span class="n">url</span>
+<span class="kn">import</span> <span class="nn">bs4</span>
+<span class="kn">import</span> <span class="nn">time</span>
+</code></pre></div></div>
+
+<p>In this function, we take the movie name as input from the user then we take the content of that particular web page using <code class="language-plaintext highlighter-rouge">urlopen</code>. Now we will parse the content using <code class="language-plaintext highlighter-rouge">BeautifulSoup</code> and find the link of the first movie result on the page and move to that link then into the comment section, click on load more comments. This is the main reason for using <strong><em>selenium</em></strong> otherwise we will stick to only 5 or 6 preloaded comments. After clicking for specific times (20) in our case, we will find the text of every review and append it into the list and return that list.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">reviews_extract</span><span class="p">():</span>
+    <span class="n">movie</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s">'Enter name of movie:'</span><span class="p">)</span>
+    <span class="n">movie</span> <span class="o">=</span> <span class="n">movie</span><span class="p">.</span><span class="n">lower</span><span class="p">()</span>    <span class="n">web</span> <span class="o">=</span> <span class="n">url</span><span class="p">.</span><span class="n">urlopen</span><span class="p">(</span><span class="s">"https://www.imdb.com/find?ref_=nv_sr_fn&amp;q="</span><span class="o">+</span><span class="n">movie</span><span class="p">)</span>
+    <span class="n">page1</span> <span class="o">=</span> <span class="n">bs4</span><span class="p">.</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">web</span><span class="p">,</span><span class="s">'lxml'</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">page1</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">'td'</span><span class="p">,</span><span class="n">class_</span><span class="o">=</span><span class="s">'result_text'</span><span class="p">)</span>
+    <span class="n">href</span> <span class="o">=</span> <span class="n">b</span><span class="p">.</span><span class="n">a</span><span class="p">[</span><span class="s">'href'</span><span class="p">]</span>
+    <span class="n">web2</span> <span class="o">=</span> <span class="n">url</span><span class="p">.</span><span class="n">urlopen</span><span class="p">(</span><span class="s">"https://www.imdb.com"</span><span class="o">+</span><span class="n">href</span><span class="p">)</span>
+    <span class="n">page2</span> <span class="o">=</span> <span class="n">bs4</span><span class="p">.</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">web2</span><span class="p">,</span><span class="s">'lxml'</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">page2</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">'div'</span><span class="p">,</span><span class="n">class_</span><span class="o">=</span><span class="s">'user-comments'</span><span class="p">)</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">c</span><span class="p">.</span><span class="n">find_all</span><span class="p">(</span><span class="s">'a'</span><span class="p">,</span><span class="n">href</span> <span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="n">g</span> <span class="o">=</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s">'href'</span><span class="p">])</span>
+        <span class="n">temp</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="p">.</span><span class="n">Chrome</span><span class="p">(</span><span class="s">'C:</span><span class="se">\\</span><span class="s">Users</span><span class="se">\\</span><span class="s">dell</span><span class="se">\\</span><span class="s">Desktop</span><span class="se">\\</span><span class="s">chromedriver.exe'</span><span class="p">)</span>
+    <span class="n">driver</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"https://www.imdb.com"</span><span class="o">+</span><span class="n">d</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">loadMoreButton</span> <span class="o">=</span> <span class="n">driver</span><span class="p">.</span><span class="n">find_element_by_class_name</span><span class="p">(</span><span class="s">'load-more-data'</span><span class="p">)</span>
+            <span class="n">loadMoreButton</span><span class="p">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">break</span>
+    <span class="n">web3</span> <span class="o">=</span> <span class="n">driver</span><span class="p">.</span><span class="n">page_source</span>
+    <span class="n">page3</span> <span class="o">=</span> <span class="n">bs4</span><span class="p">.</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">web3</span><span class="p">,</span><span class="s">'lxml'</span><span class="p">)</span>    <span class="n">e</span> <span class="o">=</span> <span class="n">page3</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">'div'</span><span class="p">,</span><span class="n">class_</span><span class="o">=</span><span class="s">'lister-list'</span><span class="p">)</span>    <span class="n">e1</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="n">find_all</span><span class="p">(</span><span class="s">'a'</span><span class="p">,</span><span class="n">class_</span><span class="o">=</span><span class="s">'title'</span><span class="p">)</span>    <span class="n">user_reviews</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">e1</span><span class="p">:</span>
+        <span class="n">raw</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">user_reviews</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">raw</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">,</span><span class="s">''</span><span class="p">))</span>
+    <span class="n">driver</span><span class="p">.</span><span class="n">quit</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">user_reviews</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">user_reviews</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">user_reviews</span><span class="p">,</span><span class="n">movie</span>
+</code></pre></div></div>
+
+<h2 id="predicting-the-sentiment-of-each-review">Predicting the sentiment of each review</h2>
+
+<p>After scraping, we move back to the previous python file. Now, here we will predict the sentiment of each scraped review with the already trained model. In the code, firstly we have loaded the model that we have saved earlier and also call the <code class="language-plaintext highlighter-rouge">reviews_extract</code> function defined above to get reviews. After that, we process every review i.e. tokenizing, remove stop words, and convert the review into the required format. Then we predict its sentiment, if it <code class="language-plaintext highlighter-rouge">neg</code> increases the count of n and if <code class="language-plaintext highlighter-rouge">pos</code> increase p and percent of positive reviews is calculated.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">predicting</span><span class="p">():</span>
+    <span class="n">classifier</span> <span class="o">=</span> <span class="n">joblib</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="s">'imdb_movies_reviews.pkl'</span><span class="p">)</span>
+    <span class="n">reviews_film</span><span class="p">,</span> <span class="n">movie</span> <span class="o">=</span> <span class="n">reviews_extract</span><span class="p">()</span>
+    <span class="n">testing</span> <span class="o">=</span> <span class="n">reviews_film</span>    <span class="n">tokens</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">testing</span><span class="p">:</span>
+        <span class="n">tokens</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">word_tokenize</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>    <span class="n">set_testing</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+        <span class="n">set_testing</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">bag_words</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>    <span class="n">final</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">set_testing</span><span class="p">:</span>
+        <span class="n">final</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">classifier</span><span class="p">.</span><span class="n">classify</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>    <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">final</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="s">'neg'</span><span class="p">:</span>
+            <span class="n">n</span><span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">p</span><span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">pos_per</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">final</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span>    <span class="k">return</span> <span class="n">movie</span><span class="p">,</span><span class="n">pos_per</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">final</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Then, in the end, we call the required functions and if the positive percentage is greater than 60%, we recommend that movie to our friends.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TrainingAndTesting</span><span class="p">()</span>
+<span class="n">movie</span><span class="p">,</span><span class="n">positive_per</span><span class="p">,</span><span class="n">total_reviews</span> <span class="o">=</span> <span class="n">predicting</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'The film {} has got {} percent positive reviews'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">movie</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">positive_per</span><span class="p">)))</span>
+<span class="k">if</span> <span class="n">positive_per</span> <span class="o">&gt;</span> <span class="mi">60</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'overall impression of movie is good  '</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'overall impression of movie is bad '</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="my-results">My Results</h1>
+
+<p>I was able to get the accuracy of the model around 78% and here is the screen shot of my result. Here 225 are the number of reviews that are analyzed.</p>
+
+<p><img src="/assets/img/post3_3.jpeg" alt="Obtained results" /></p>
+
+<p>The described project is for the beginners, hence I have not used advanced techniques like RNN(Recurrent Neural Networks). The only focus of this article was to provide knowledge and starting phase projects in the field of machine learning.</p>
+
+<p>Thank you for your precious time.😊And I hope you like this tutorial.</p>
+
+<p>You can find the source code for the same at my<a href="https://github.com/PushkaraSharma/Automatic_Movie_Review_NLP"> <strong>Github repo</strong></a><strong>.</strong></p>
+
+:ET

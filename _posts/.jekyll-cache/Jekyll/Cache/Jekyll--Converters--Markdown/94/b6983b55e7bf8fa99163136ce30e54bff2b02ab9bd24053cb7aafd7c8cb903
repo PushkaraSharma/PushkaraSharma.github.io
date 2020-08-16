@@ -1,0 +1,163 @@
+I"NJ<h2 id="automatically-makes-a-small-summary-of-the-article-containing-the-most-important-sentences">Automatically makes a small summary of the article containing the most important sentences.</h2>
+
+<blockquote>
+  <h4 id="have-you-seen-applications-like--inshorts-that-converts-the-articles-or-news-into-60-words-summary-yes-thats-what-we-are-going-to-build-today-in-this-article-we-will-build-a-text-summarizer-with-extractive-method-that-is-super-easy-to-build-and-very-reliable-when-it-comes-to-results-dont-worry-i-will-also-explain-what-this-extracted-method-is"><em>Have you seen applications like</em>  <strong><em>inshorts</em></strong> that converts the articles or news into 60 words summary. Yes, that’s what we are going to build today. In this article, we will build a text summarizer with <strong><em>extractive method</em></strong> that is super easy to build and very reliable when it comes to results. Don’t worry, I will also explain what this extracted method is?</h4>
+</blockquote>
+
+<p><img src="/assets/img/post4_1.png" alt="Sentimental Analysis with Web Scraping" /></p>
+
+<p>You may found many articles about <strong><em>text summarizers</em></strong> but what makes this article unique is the <strong><em>short</em></strong> and <strong><em>beginners friendly</em></strong> high-level description of the code snippets.</p>
+
+<p>So, Text summarization can be done in two ways:-</p>
+
+<ul>
+  <li><strong><em>Extractive method</em></strong> — Selecting the <strong>n</strong> numbers of most important sentences from the article that most probably convey the message of the article. This approach is very easy to implement and beginners friendly. That’s the main reason of choosing this method for this tutorial.</li>
+  <li><strong><em>Abstractive method</em></strong> — This method uses concepts of deep learning like <strong><em>encoder-decoder</em></strong> architecture, <strong>LSTM(</strong>Long Short Term Memory<strong>)</strong> networks that are very difficult for beginners to understand. This method generates the whole new summary of the article and contains sentences that are not even present in the original article. This method may lead to the creation of sentences that don’t have any meaning at all.</li>
+</ul>
+
+<p>Now, as we are clear about why we have chosen the extracted method, Lets directly jump to the coding section 😎</p>
+
+<h2 id="prerequisites-"><strong>Prerequisites:-</strong></h2>
+
+<p>I assume that you are familiar with <strong><em>python</em></strong> and already have installed the <strong><em>python 3</em></strong> in your systems. I have used <strong><em>jupyter notebook</em></strong> for this tutorial. You can use the <strong>IDE</strong> of your like.</p>
+
+<h2 id="installing-required-libraries"><strong>Installing Required Libraries</strong></h2>
+
+<p>For this project, you need to have the following packages installed in your python. If they are not installed, you can simply use<code class="language-plaintext highlighter-rouge">pip install PackageName</code> . The <strong><em>scraping part</em></strong> is optional, you can also skip that and use any local text file for which you want a summary.</p>
+
+<ul>
+  <li><strong>bs4</strong> — for BeautifulSoup that is used for parsing HTML page.</li>
+  <li><strong>lxml</strong> — it is the package that is used to process HTML and XML with python.</li>
+  <li><strong>nltk</strong> — for performing natural language processing tasks.</li>
+  <li><strong>urllib</strong> — for requesting a web page.</li>
+</ul>
+
+<h1 id="lets-start-coding"><strong>LETS START CODING</strong></h1>
+
+<p>Here, firstly we have import all the libraries that we will use. <strong><em>bs4</em></strong> and <strong><em>urllib</em></strong> will be used for scraping of the article. <strong><em>re</em></strong> (regular expression) is used for removing unwanted text from the article. The 4th line is used to install the <strong><em>nltk</em></strong> (natural language toolkit ) package that is the most important package for this tutorial. After that, we have downloaded some of the data that is required for the text processing like <strong><em>punkt</em></strong> (used for sentence tokenizing) and <strong><em>stopwords</em></strong> (words like <code class="language-plaintext highlighter-rouge">is,the,of</code> that does not contribute).</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">bs4</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span> <span class="k">as</span> <span class="n">url</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="c1">#!pip3 install nltk
+</span><span class="kn">import</span> <span class="nn">nltk</span>
+<span class="n">nltk</span><span class="p">.</span><span class="n">download</span><span class="p">(</span><span class="s">'punkt'</span><span class="p">)</span>
+<span class="n">nltk</span><span class="p">.</span><span class="n">download</span><span class="p">(</span><span class="s">'stopwords'</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">nltk</span> <span class="kn">import</span> <span class="n">sent_tokenize</span>
+<span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
+<span class="kn">from</span> <span class="nn">nltk</span> <span class="kn">import</span> <span class="n">word_tokenize</span>
+<span class="n">stop_word</span> <span class="o">=</span> <span class="n">stopwords</span><span class="p">.</span><span class="n">words</span><span class="p">(</span><span class="s">'english'</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">string</span>
+</code></pre></div></div>
+
+<p>Here, I have simply taken the URL of the article from the user itself.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">url_name</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s">"Enter url of the text you want to summerize:"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>In this snippet of code, we have requested the page source with urllib and then parse that page with <strong><em>BeautifulSoup</em></strong> to find the paragraph tags and added the text to the <code class="language-plaintext highlighter-rouge">article</code>variable.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">web</span> <span class="o">=</span> <span class="n">url</span><span class="p">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url_name</span><span class="p">)</span>
+<span class="n">page</span> <span class="o">=</span> <span class="n">bs4</span><span class="p">.</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">web</span><span class="p">,</span><span class="s">'html.parser'</span><span class="p">)</span>
+<span class="n">elements</span> <span class="o">=</span> <span class="n">page</span><span class="p">.</span><span class="n">find_all</span><span class="p">(</span><span class="s">'p'</span><span class="p">)</span>
+<span class="n">article</span> <span class="o">=</span> <span class="s">''</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+    <span class="n">article</span><span class="o">+=</span> <span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>
+<span class="n">article</span>
+</code></pre></div></div>
+
+<p>Now, we remove all the special characters from that string variable <code class="language-plaintext highlighter-rouge">article</code>that contains the whole article that is to be summarized. For this, we have simply used inbuilt <code class="language-plaintext highlighter-rouge">replace</code>function and also used a regular expression (<strong><em>re</em></strong>) to remove numbers.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">processed</span> <span class="o">=</span> <span class="n">article</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">r'^\s+|\s+?$'</span><span class="p">,</span><span class="s">''</span><span class="p">)</span>
+<span class="n">processed</span> <span class="o">=</span> <span class="n">processed</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">,</span><span class="s">' '</span><span class="p">)</span>
+<span class="n">processed</span> <span class="o">=</span> <span class="n">processed</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">"</span><span class="se">\\</span><span class="s">"</span><span class="p">,</span><span class="s">''</span><span class="p">)</span>
+<span class="n">processed</span> <span class="o">=</span> <span class="n">processed</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">","</span><span class="p">,</span><span class="s">''</span><span class="p">)</span>
+<span class="n">processed</span> <span class="o">=</span> <span class="n">processed</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'"'</span><span class="p">,</span><span class="s">''</span><span class="p">)</span>
+<span class="n">processed</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="n">sub</span><span class="p">(</span><span class="s">r'\[[0-9]*\]'</span><span class="p">,</span><span class="s">''</span><span class="p">,</span><span class="n">processed</span><span class="p">)</span>
+<span class="n">processed</span>
+</code></pre></div></div>
+
+<p>Here, we have simply used the <code class="language-plaintext highlighter-rouge">sent_tokenize</code>function of <strong><em>nltk</em></strong> to make the list that contains sentences of the article at each index.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sentences</span> <span class="o">=</span> <span class="n">sent_tokenize</span><span class="p">(</span><span class="n">processed</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>After that, we convert the characters of article to <code class="language-plaintext highlighter-rouge">lowercase</code>. Then we loop through every word of the article and check if it is not stopword or any punctuation(we have already removed the punctuations but we still use this just in case). And if the word is none of them we just added that word into the dictionary and then further count the <strong><em>frequency</em></strong> of that word.</p>
+
+<p>In the screen shot, you can see the dictionary containing every word with its count in the article(higher the frequency of the word, more important it is). Now you know why we have removed stopwords like <code class="language-plaintext highlighter-rouge">of the for</code> otherwise, they will come on top.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">frequency</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">processed1</span> <span class="o">=</span> <span class="n">processed</span><span class="p">.</span><span class="n">lower</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">word_tokenize</span><span class="p">(</span><span class="n">processed1</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stop_word</span> <span class="ow">and</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">string</span><span class="p">.</span><span class="n">punctuation</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">frequency</span><span class="p">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">frequency</span><span class="p">[</span><span class="n">word</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">frequency</span><span class="p">[</span><span class="n">word</span><span class="p">]</span><span class="o">+=</span><span class="mi">1</span>
+<span class="n">frequency</span>
+</code></pre></div></div>
+
+<p><img src="https://miro.medium.com/max/301/1*Sw3oEthOgrf0-w6H4y6SEA.png" alt="A dictionary containing every word of article with its frequency" /></p>
+
+<p>​                                                <em>A dictionary containing every word of article with its frequency</em></p>
+
+<p>Here, we have calculated the importance of every word in the dictionary by simply dividing the <strong>frequency</strong> of every word with the <strong>maximum frequency</strong> among them. In the screen shot, you can clearly see that importance of word <code class="language-plaintext highlighter-rouge">language</code>comes on top as it has the max frequency that is <strong>22</strong>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">max_fre</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">frequency</span><span class="p">.</span><span class="n">values</span><span class="p">())</span>
+<span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">frequency</span><span class="p">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="n">frequency</span><span class="p">[</span><span class="n">word</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="n">frequency</span><span class="p">[</span><span class="n">word</span><span class="p">]</span><span class="o">/</span><span class="n">max_fre</span><span class="p">)</span>
+<span class="n">frequency</span>
+</code></pre></div></div>
+
+<p><img src="https://miro.medium.com/max/426/1*6yTj6QITSzbn5CqZrtL8sw.png" alt="Importance of every word of the article" /></p>
+
+<p>​                                                                       <em>Importance of every word of the article</em></p>
+
+<p>After doing that, now we have to calculate the importance of every sentence of the article. And for doing this, we iterate through every sentence of the article, then for every word in the sentence added the individual <strong>score</strong> or <strong>importance</strong> of the word to give the final score of that particular sentence.</p>
+
+<p>In the screen shot, you can clearly see that every sentence now has some score that represents how important that sentence is.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sentence_score = {}
+for sent in sentences:
+    for word in word_tokenize(sent):
+        if word in frequency.keys():
+            if len(sent.split(' '))&lt;30:
+                if sent not in sentence_score.keys():
+                    sentence_score[sent] = frequency[word]
+                else:
+                    sentence_score[sent]+=frequency[word]
+sentence_score
+</code></pre></div></div>
+
+<p><img src="https://miro.medium.com/max/980/1*LzbU0FJ8vme8wOuXT59I2Q.png" alt="Score or importance of every sentence" /></p>
+
+<p>​                                                                <em>Score or importance of every sentence</em></p>
+
+<p><strong>In the end</strong>, We have used <code class="language-plaintext highlighter-rouge">heapq</code> to find the 4 sentences with the highest scores. You can choose any number of sentences you want. Then simply joined the list of selected sentences to form a single string of summary.</p>
+
+<p>The final output summary for the <em>Natural Language Processing</em> article can be seen in the screen shot attached.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">heapq</span>
+<span class="n">summary</span> <span class="o">=</span> <span class="n">heapq</span><span class="p">.</span><span class="n">nlargest</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">sentence_score</span><span class="p">,</span><span class="n">key</span> <span class="o">=</span> <span class="n">sentence_score</span><span class="p">.</span><span class="n">get</span><span class="p">)</span>
+<span class="n">summary</span> <span class="o">=</span> <span class="s">' '</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span>
+<span class="n">final</span> <span class="o">=</span> <span class="s">"SUMMARY:- </span><span class="se">\n</span><span class="s">  "</span> <span class="o">+</span><span class="n">summarytextfinal</span> <span class="o">=</span> <span class="s">'TEXT:-    '</span><span class="o">+</span><span class="n">processed</span>
+<span class="n">textfinal</span> <span class="o">=</span> <span class="n">textfinal</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'ascii'</span><span class="p">,</span><span class="s">'ignore'</span><span class="p">)</span>
+<span class="n">textfinal</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">textfinal</span><span class="p">)</span> 
+<span class="n">final</span>
+</code></pre></div></div>
+
+<p><img src="https://miro.medium.com/max/1056/1*08SR_0zXZ7rum84CTy_S7A.png" alt="Final extracted summary" /></p>
+
+<p>​                                                                            <em>Final extracted summary</em></p>
+
+<p><img src="/assets/img/post4_2.gif" alt="" /></p>
+
+<p>​                     <em>YES! WE DID IT</em></p>
+
+<p>The <strong><em>extracted summary</em></strong> may be not up to the mark but it is capable enough of conveying the main idea of the given article. Also, it is more <strong>reliable</strong> as it only outputs the selected number of sentences from the article itself rather than generating the output of its own.</p>
+
+<p>I will also try to make the tutorial for the <strong>abstractive method</strong>, but that will be a great challenge for me to explain.</p>
+
+<p>Thank you for your precious time.😊And I hope you like this tutorial.</p>
+
+:ET

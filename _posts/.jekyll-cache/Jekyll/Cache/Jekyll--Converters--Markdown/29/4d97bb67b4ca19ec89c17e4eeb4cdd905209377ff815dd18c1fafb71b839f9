@@ -1,0 +1,78 @@
+I"�)<blockquote>
+  <h3 id="this-project-will-give-you-a-solid-foundation-in-understanding-the-structure-of-images-and-playing-around-it-and-that-is-in-a-fun-way-so-lets-get-started"><strong>This project will give you a solid foundation in understanding the structure of images and playing around it and that is in a fun way!! So, Let’s get started.</strong></h3>
+</blockquote>
+
+<p><img src="/assets/img/Ascii.png" alt="" /></p>
+
+<p><strong>Dependencies Required:</strong></p>
+
+<p>You must have python installed on your system along with <code class="language-plaintext highlighter-rouge">pillow</code> python package. You can simply install <code class="language-plaintext highlighter-rouge">pillow</code> with <code class="language-plaintext highlighter-rouge">pip install pillow</code>. Firstly I will explain all the steps then we will proceed to the code snippets.</p>
+
+<p><strong>Steps:-</strong></p>
+
+<ul>
+  <li>Open the image from the provided path.</li>
+  <li>Scale the images otherwise very big output image will be generated.</li>
+  <li>Convert the image into greyscale image.</li>
+  <li>Get relevant character for each pixel from the character list(according to the pixel value, the character from the list is chosen i.e. “_” represents low density).</li>
+  <li>Now that character is printed on the new canvas of given size with ImageDraw function(in the function itself you can choose the colors to be RGB or B&amp;W).</li>
+  <li>Save the newly generated image and you are done!!!</li>
+</ul>
+
+<h2 id="code"><strong>Code:</strong></h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span><span class="n">ImageDraw</span><span class="p">,</span><span class="n">ImageFont</span>
+<span class="kn">import</span> <span class="nn">math</span>
+</code></pre></div></div>
+
+<p>Import these libraries first</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">.</span><span class="nb">open</span><span class="p">(</span><span class="s">"InputImage.jpg"</span><span class="p">)</span>
+<span class="n">scaleFac</span> <span class="o">=</span> <span class="mf">0.8</span>
+<span class="n">charWidth</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">charHeight</span> <span class="o">=</span> <span class="mi">18</span>
+<span class="n">w</span><span class="p">,</span><span class="n">h</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">size</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">resize</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">scaleFac</span><span class="o">*</span><span class="n">w</span><span class="p">),</span><span class="nb">int</span><span class="p">(</span><span class="n">scaleFac</span><span class="o">*</span><span class="n">h</span><span class="o">*</span><span class="p">(</span><span class="n">charWidth</span><span class="o">/</span><span class="n">charHeight</span><span class="p">))),</span><span class="n">Image</span><span class="p">.</span><span class="n">NEAREST</span><span class="p">)</span>
+<span class="n">w</span><span class="p">,</span><span class="n">h</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">size</span>
+<span class="n">pixels</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">load</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Here Firstly the image is loaded then the scaling factor is chosen (0.1–1) and the size of each ASCII character in the final output image is decided then the width and height of image are taken and the image is resized. Doing so is very important otherwise more computational power will be used and the output images will be too big.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">font</span> <span class="o">=</span> <span class="n">ImageFont</span><span class="p">.</span><span class="n">truetype</span><span class="p">(</span><span class="s">'C:</span><span class="se">\\</span><span class="s">Windows</span><span class="se">\\</span><span class="s">Fonts</span><span class="se">\\</span><span class="s">lucon.ttf'</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">outputImage</span> <span class="o">=</span> <span class="n">Image</span><span class="p">.</span><span class="n">new</span><span class="p">(</span><span class="s">'RGB'</span><span class="p">,(</span><span class="n">charWidth</span><span class="o">*</span><span class="n">w</span><span class="p">,</span><span class="n">charHeight</span><span class="o">*</span><span class="n">h</span><span class="p">),</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">draw</span> <span class="o">=</span> <span class="n">ImageDraw</span><span class="p">.</span><span class="n">Draw</span><span class="p">(</span><span class="n">outputImage</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Now the font for ASCII characters is decided. I have used inbuilt fonts of windows. After that, a canvas ‘outputImage’ of black color is created using Image function and ImageDraw object is created to embed ASCII characters on the canvas.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">getSomeChar</span><span class="p">(</span><span class="n">h</span><span class="p">):</span>
+    <span class="n">chars</span>  <span class="o">=</span> <span class="s">"$@B%8&amp;WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-                          _+~&lt;&gt;i!lI;:,</span><span class="se">\"</span><span class="s">^`'. "</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">charArr</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">charArr</span><span class="p">)</span>
+    <span class="n">mul</span> <span class="o">=</span> <span class="n">l</span><span class="o">/</span><span class="mi">256</span>
+    <span class="k">return</span> <span class="n">charArr</span><span class="p">[</span><span class="n">math</span><span class="p">.</span><span class="n">floor</span><span class="p">(</span><span class="n">h</span><span class="o">*</span><span class="n">mul</span><span class="p">)]</span>
+</code></pre></div></div>
+
+<p>This function <strong>getSomeChar</strong> will get pixel value as a parameter that ranges between 0–256 and it returns respective ASCII character from the chars list. You can make your own char list if you want.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">h</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">w</span><span class="p">):</span>
+        <span class="n">r</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">pixels</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">grey</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">r</span><span class="o">/</span><span class="mi">3</span><span class="o">+</span><span class="n">g</span><span class="o">/</span><span class="mi">3</span><span class="o">+</span><span class="n">b</span><span class="o">/</span><span class="mi">3</span><span class="p">))</span>
+        <span class="n">pixels</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">grey</span><span class="p">,</span><span class="n">grey</span><span class="p">,</span><span class="n">grey</span><span class="p">)</span>
+        <span class="n">draw</span><span class="p">.</span><span class="n">text</span><span class="p">((</span><span class="n">j</span><span class="o">*</span><span class="n">charWidth</span><span class="p">,</span><span class="n">i</span><span class="o">*</span><span class="n">charHeight</span><span class="p">),</span><span class="n">getSomeChar</span><span class="p">(</span><span class="n">grey</span><span class="p">),</span>
+        <span class="n">font</span><span class="o">=</span><span class="n">font</span><span class="p">,</span><span class="n">fill</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">b</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>This is where the most important work is done. We loop through each pixel and gathered RGB components and the mean of them gives us the gray pixel value. Now, in a <code class="language-plaintext highlighter-rouge">draw.text</code> it takes the position of embedding character as the first argument and character itself that is being chosen with <strong>getSomeChar</strong> function as the second argument, a font that we have chosen earlier as the third and fill that is color as the fourth argument.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>outputImage.save("name_for_output.png")
+</code></pre></div></div>
+
+<p>Then just save the image…..and share the generated artistic image.</p>
+
+<p>You can play around with font size, font style, scaling factor, canvas background, and characters list.</p>
+
+<p>This is my first blog … so please let me know if you guys like this or not. Suggestions are most welcome.</p>
+:ET

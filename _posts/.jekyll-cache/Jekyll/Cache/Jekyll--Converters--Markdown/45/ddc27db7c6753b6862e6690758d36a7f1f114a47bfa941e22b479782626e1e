@@ -1,0 +1,183 @@
+I"�o<h2 id="predicting-the-upcoming-trend-of-stock-using-deep-learning-modelrecurrent-neural-network">Predicting the upcoming trend of stock using Deep learning Model(Recurrent Neural Network)</h2>
+
+<blockquote>
+  <h3 id="in-this-article-we-will-build-a-deep-learning-model-specifically-the-rnn-model-that-will-help-us-to-predict-whether-the-given-stock-will-go-up-or-down-in-the-future-remember-we-are-not-interested-in-predicting-the-actual-values-as-that-will-be-far-more-complex-compared-to-the-prediction-of-the-trend"><em>In this article, we will build a deep learning model (specifically the <strong>RNN</strong> Model) that will help us to <strong>predict whether the given stock will go up or down in the future</strong>. Remember, we are not interested in predicting the actual values as that will be far more complex compared to the prediction of the trend.</em></h3>
+</blockquote>
+
+<p><img src="/home/pushkara/Desktop/portfolio/flexible-jekyll/assets/img/post5.png" alt="" /></p>
+
+<p>If you are new to <strong>deep learning</strong>, don’t worry I will try my best to give a <strong>simple</strong> and <strong>easy</strong> explanation of the whole tutorial. Also, I consider this particular project as an <strong>entry-level</strong> project or the simplest project that one must do with the <strong>recurrent neural networks.</strong></p>
+
+<p>So, the first question that comes in mind is <strong>What is Recurrent Neural Network?</strong></p>
+
+<p>To understand this, we have to understand the <strong>neural network</strong> first. Here, I assume that you are already familiar with <strong>machine learning</strong>. The neural network, also known as <strong>Artificial Neural Network (ANN),</strong> is made up of three stages namely the <strong>input layer</strong>, the number of <strong>hidden layers</strong>, and the <strong>output layer</strong>. As the name suggests, the input layer is used to take input and feed it into the model, and the output layer is used to gives the predicted outcome whereas the hidden layers are responsible for all mathematical computations(every unit or cell is responsible for doing small operations ). <a href="https://www.tutorialspoint.com/artificial_intelligence/artificial_intelligence_neural_networks.htm"><em>Know more about ANN here</em></a>.</p>
+
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*k8w6is1RTCDbj-OA_nQKZA.png" alt="Artificial Neural Network" /></p>
+
+<p><strong>Recurrent Neural Networks(RNN)</strong> are one of the types of neural networks in which the output of one step in time act as the input for the next step in time. For example, in the sentence <strong>“I am hungry, I need food”</strong>, it is very important to remember the word <strong>hungry</strong> to predict <strong>food</strong>. Hence to predict the upcoming word, it is important to remember the previous words. And to resolve this kind of problem, RNN comes to rescue. The main feature of RNN is a <strong>hidden state</strong> that remembers the sequence information. RNN performs very well when it comes to sequence data like weather, stock market, text, etc. I will not go in great detail about the <a href="https://www.geeksforgeeks.org/introduction-to-recurrent-neural-network/"><strong>working of the RNN</strong></a> considering that the article is beginners friendly, but you can always Google things 😄</p>
+
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*_F_9bvnRpN3lY_9SGcyMkQ.png" alt="Recurrent Neural Networks" /></p>
+
+<h3 id="prerequisites-">Prerequisites:-</h3>
+
+<p>I assume that you are familiar with <strong>python</strong> and already have installed the <strong>python 3</strong> in your systems. I have used a <strong>jupyter notebook</strong> for this tutorial. You can use the <strong>IDE</strong> of your like.</p>
+
+<h3 id="dataset-used-">Dataset Used:-</h3>
+
+<p>The dataset that we have used for this tutorial is of NSE Tata Global stock and is available on <a href="https://github.com/mwitiderrick/stockprice/blob/master/NSE-TATAGLOBAL.csv"><strong>GitHub</strong></a>.</p>
+
+<h3 id="installing-required-libraries">Installing Required Libraries</h3>
+
+<p>For this project, you need to have the following packages installed in your python. If they are not installed, you can simply use<code class="language-plaintext highlighter-rouge">pip install PackageName</code> .</p>
+
+<ul>
+  <li><strong>NumPy</strong> — This library provides fast computing n-dimensional array objects.</li>
+  <li><strong>pandas</strong> — It provides a data frame and series to perform manipulation and analysis on data.</li>
+  <li><strong>matplotlib</strong> — This library helps in the visualization of data using various plots.</li>
+  <li><strong>scikit-learn</strong> — It is a machine learning library that provides various tools and algorithms for predictive analysis. We will use its tools or functions for the preprocessing of the data.</li>
+  <li><strong>Keras</strong> — It is a high level deep learning library built over <strong>TensorFlow</strong> to provide a simple implementation of neural networks. We have used it because it is beginners friendly and easy to implement.</li>
+  <li><strong>TensorFlow</strong> — This library is required by the <strong>Keras</strong> as Keras runs over the TensorFlow itself.</li>
+</ul>
+
+<h3 id="lets-start-coding">LETS START CODING</h3>
+
+<p>Firstly, we need to import the libraries that we will use in the project. Here, <code class="language-plaintext highlighter-rouge">numpy</code> is used to create NumPy arrays for training and testing data. <code class="language-plaintext highlighter-rouge">pandas</code> for making the data frame of the dataset and retrieving values easily. <code class="language-plaintext highlighter-rouge">matplotlib.pyplot</code> to plot the data like overall stock prices and predicted prices. <code class="language-plaintext highlighter-rouge">MinMaxScaler</code> from <strong>sklearn’s</strong>(scikit-learn) preprocessing package to normalize the data. We have imported <code class="language-plaintext highlighter-rouge">Sequential</code> <code class="language-plaintext highlighter-rouge">dense</code> <code class="language-plaintext highlighter-rouge">LSTM</code> <code class="language-plaintext highlighter-rouge">Dropout</code>from <strong>Keras</strong> that will help to create a deep learning model. We will discuss these modules later on.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MinMaxScaler</span>
+<span class="c1">#for deep learning model
+</span><span class="kn">from</span> <span class="nn">keras</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">LSTM</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dropout</span>
+</code></pre></div></div>
+
+<p>Now, we have loaded our dataset as a data frame in a variable named <strong>df</strong>. Then, we have checked the shape of the dataset that comes out to be <strong>(2035,8)</strong> means there are 2035 rows and 8 columns in the dataset. After that, we have reversed the dataset upside-down so that the <strong>date</strong> starts from the oldest and goes to the most recent, and in doing so we also have to reset our indexes as well. Then we have just printed some starting rows of the dataset with <code class="language-plaintext highlighter-rouge">head()</code> . The first 5 entries of dataset are shown in screenshot below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'NSE-TATAGLOBAL.csv'</span><span class="p">)</span>
+<span class="n">df</span><span class="p">.</span><span class="n">shape</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="https://cdn-images-1.medium.com/max/800/1*hfHXR7wCNp_eqwTOzCleXg.jpeg" alt="Dataset’s first 5 entries" /></p>
+
+<p>​</p>
+
+<p>We have chosen only one feature that is <strong>Open</strong> to train our model but you are free to choose more than one feature but then the code will be changed accordingly. In the training set, we have 2000 values while in testing we decided to have only 35. Then we simply printed the shape of both <code class="language-plaintext highlighter-rouge">train_set</code> <code class="language-plaintext highlighter-rouge">test_set</code> that comes out to be (2000,1) and (35,1) respectively.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">open_price</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">train_set</span> <span class="o">=</span> <span class="n">open_price</span><span class="p">[:</span><span class="mi">2000</span><span class="p">].</span><span class="n">values</span>
+<span class="n">test_set</span> <span class="o">=</span> <span class="n">open_price</span><span class="p">[</span><span class="mi">2000</span><span class="p">:].</span><span class="n">values</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Train size: "</span><span class="p">,</span><span class="n">train_set</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Test size:"</span><span class="p">,</span><span class="n">test_set</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Here, we have converted the <strong>Date</strong> column into <strong>DateTime</strong> format to plot it conveniently. Then simply used <code class="language-plaintext highlighter-rouge">plot_date</code> to plot the figure of the <strong>open price</strong> of stock throughout the time line and saved the figure using <code class="language-plaintext highlighter-rouge">savefig</code> .</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dates</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'Date'</span><span class="p">])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot_date</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">open_price</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s">'-'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">"test1final.png"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="https://cdn-images-1.medium.com/max/800/1*Av08JN-vhrYbWqyDuggntQ.png" alt="Open price of NSE Tata Global (2010–2019)" /></p>
+
+<p>​                                                              <em>Open price of NSE Tata Global (2010–2019)</em></p>
+
+<p>Now, we have initialized the <code class="language-plaintext highlighter-rouge">MinMaxScalar</code> that is used to scale every value in the range of 0 and 1. It is a very important step because Neural Networks and other algorithms converge faster when features are on a relatively similar scale.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sc</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
+<span class="n">train_set_scaled</span> <span class="o">=</span> <span class="n">sc</span><span class="p">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">train_set</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Here comes the tricky part. Now, we have to make the data suitable for our <strong>RNN</strong> model i.e. making sequences of data with the target final value. Let me explain with the example. Suppose we have a dataset that has values from 1–10, and we have a sequence length of 3. In that case, our training data will look like this-</p>
+
+<p><img src="https://cdn-images-1.medium.com/max/800/1*IwKWffPMOCL0Wexa6Qt0Xw.jpeg" alt="Example of sequence training data" /></p>
+
+<p>​                                                                    <em>Example of sequence training data</em></p>
+
+<p>Here in the code, the length of the sequence is 60 that means only the previous 60 values will decide the next value, not the whole dataset. After that, we have created NumPy arrays of both <code class="language-plaintext highlighter-rouge">x_train</code> and <code class="language-plaintext highlighter-rouge">y_train</code> for fast computation and reshaped the training set according to the requirement of our model. The final shape of <code class="language-plaintext highlighter-rouge">x_train</code> comes out to be (1940, 60, 1).</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x_train</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="mi">2000</span><span class="p">):</span>
+    <span class="n">x_train</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">train_set_scaled</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">60</span><span class="p">:</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">y_train</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">train_set_scaled</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_train</span><span class="p">)</span>
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x_train</span><span class="p">,(</span><span class="n">x_train</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">x_train</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">x_train</span><span class="p">.</span><span class="n">shape</span>
+</code></pre></div></div>
+
+<p>Now, we will create our model’s architecture. We have used <strong>Keras</strong> because it is quite easy to make <strong>a deep learning</strong> model with Keras compared to other available libraries. Here, we have initialized our <strong>Sequential</strong> object that acts as the bundler for all the layers inside the model. Our model in total has <strong>4 LSTM</strong> layers and <strong>one dense</strong> layer.</p>
+
+<p><strong>LSTM(Long Short Term Memory)</strong> is a type of recurrent neural network that has some <strong>contextual state cells</strong> that act as long-term or short-term memory cells and these cells modulate the output. It is important when we need to predict the output based on the <strong>historical context</strong> rather than just the last input. For example, we have to predict the next number in the sequence <strong>3,4,5,?</strong> then output is simply <strong>6</strong>(x+1) but in the sequence <strong>0,2,4,?</strong> the output is also <strong>6</strong> but it also depends on <strong>contextual information</strong>.</p>
+
+<p><strong>Dropout</strong> is used to prevent the <strong>over fitting</strong> of the data by simply deactivating some of the units(<strong>neurons</strong>) at a time, In our case, <strong>20</strong>% of units are deactivated at a time. In the end, we have a <strong>Dense</strong> layer with <strong>1</strong> unit that gives the predicted value. Then, we simply compiled our model with <code class="language-plaintext highlighter-rouge">adam</code> optimizer and fit our model on the data and run for <strong>20</strong> iterations i.e. <code class="language-plaintext highlighter-rouge">epochs</code> .</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">reg</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+<span class="n">reg</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span><span class="n">return_sequences</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="n">x_train</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">1</span><span class="p">)))</span>
+<span class="n">reg</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+<span class="n">reg</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span><span class="n">return_sequences</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+<span class="n">reg</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+<span class="n">reg</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span><span class="n">return_sequences</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+<span class="n">reg</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+<span class="n">reg</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="mi">50</span><span class="p">))</span>
+<span class="n">reg</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+<span class="n">reg</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">reg</span><span class="p">.</span><span class="nb">compile</span><span class="p">(</span><span class="n">optimizer</span> <span class="o">=</span> <span class="s">'adam'</span><span class="p">,</span><span class="n">loss</span><span class="o">=</span><span class="s">'mean_squared_error'</span><span class="p">)</span>
+<span class="n">reg</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">batch_size</span> <span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="https://cdn-images-1.medium.com/max/800/1*nhZkDz9RSGiNuQOjnYjpzg.jpeg" alt="Loss of every iteration" /></p>
+
+<p>​                                                                           <em>Loss of every iteration</em></p>
+
+<p>As you can see our model converges at <strong>15</strong> epochs and it took me around <strong>90</strong> minutes to run <strong>20</strong> epochs in total. Yes <strong>RNN</strong> model takes time to train.</p>
+
+<p><img src="https://cdn-images-1.medium.com/max/800/1*AYbXOJKwz8nLo2eDi-0nsw.gif" alt="RNN Model takes time" /></p>
+
+<p>​                                                                               <em>RNN Model Takes Time</em></p>
+
+<p>Now, its time to create input for the testing. The shape of <code class="language-plaintext highlighter-rouge">input</code> is (95, 1) and we scale this data as well.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">input</span> <span class="o">=</span> <span class="n">open_price</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">open_price</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">test_set</span><span class="p">)</span><span class="o">-</span><span class="mi">60</span><span class="p">:].</span><span class="n">values</span>
+<span class="nb">input</span><span class="p">.</span><span class="n">shape</span>
+<span class="nb">input</span> <span class="o">=</span> <span class="n">sc</span><span class="p">.</span><span class="n">transform</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Here’s the final part, in which we simply make <strong>sequences</strong> of data to predict the stock value of the last 35 days. The first sequence contains data from 1–60 to predict 61st value, second sequence 2–61 to predict 62nd value, and so on. The shape of <code class="language-plaintext highlighter-rouge">x_test</code> is (35, 60, 1) that justifies the explanation.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x_test</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="mi">95</span><span class="p">):</span>
+    <span class="n">x_test</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="nb">input</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">60</span><span class="p">:</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x_test</span><span class="p">,(</span><span class="n">x_test</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">x_test</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">x_test</span><span class="p">.</span><span class="n">shape</span>
+</code></pre></div></div>
+
+<p><strong>In the end</strong>, we simply <strong>predict</strong> the values using <code class="language-plaintext highlighter-rouge">predict</code> the function of our defined model and plot the last <strong>35</strong> actual and predicted values of a given stock.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pred</span> <span class="o">=</span> <span class="n">reg</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
+<span class="n">pred</span> <span class="o">=</span> <span class="n">sc</span><span class="p">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">test_set</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s">'green'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s">'red'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Stock_prediction'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="https://cdn-images-1.medium.com/max/800/1*T6FgIYJGUv57O7NAgmYhlA.png" alt="Final Result" /></p>
+
+<p>​                                                                                     <em>Final Result</em></p>
+
+<p>As you can see from the figure itself, our model was <strong>quite accurate in predicting the upcoming trend of the given stock</strong>.😎 Now you can become a great advisor in the share market. 😆</p>
+
+<p>The source code is available on <a href="https://github.com/PushkaraSharma/medium_articles_code/tree/master/Predict_Stock_Trend_RNN"><strong>GitHub</strong></a>. Please feel free to make improvements.</p>
+
+<p>The model can further be improved by incorporating <strong>more features</strong>, <strong>increasing the dataset</strong>, and <strong>tuning the model</strong> itself.</p>
+
+<p>Thank you for your precious time.😊And I hope you like this tutorial.</p>
+:ET
