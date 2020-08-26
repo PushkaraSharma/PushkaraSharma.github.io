@@ -1,9 +1,9 @@
 ---
 layout: post
 title: Why Every Data Scientist Should Write Tech Blogs
-date: 2020-08-25 11:44:34 +0300
+date: 2020-08-25 15:44:34 +0300
 description: 5 Benefits of writing Blogs that will definitely Boost your Data Science Profile.# Add post description (optional)
-img: post9_1.jpg # Add image post (optional)
+img: post9_1.png # Add image post (optional)
 tags: [Artificial Intelligence,Blogging]
 ---
 ## 5 Benefits of writing Blogs that will definitely Boost your Data Science Profile.
